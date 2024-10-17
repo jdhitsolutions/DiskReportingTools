@@ -1,4 +1,4 @@
-﻿
+
 Function Show-DriveUsage {
 
 
@@ -11,12 +11,12 @@ Function Show-DriveUsage {
             'Q:', 'R:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:')]
         [string]$Drive,
 
-        [ValidateNotNullorEmpty()]
+        [ValidateNotNullOrEmpty()]
         [Alias("CN")]
-        [string]$Computername = $env:COMPUTERNAME
+        [string]$ComputerName = $env:ComputerName
     )
 
-    Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.Mycommand)"
+    Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.MyCommand)"
 
     if ($Drive) {
         $filter = "DeviceID='$Drive'"
@@ -26,12 +26,12 @@ Function Show-DriveUsage {
     }
 
     Try {
-        Write-Verbose "[PROCESS] Querying $Computername"
+        Write-Verbose "[PROCESS] Querying $ComputerName"
 
-        $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter $Filter -ComputerName $Computername -ErrorAction Stop
+        $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter $Filter -ComputerName $ComputerName -ErrorAction Stop
     }
     Catch {
-        Write-Warning "Failed to retrieve disk information from $Computername. $($_.exception.message)"
+        Write-Warning "Failed to retrieve disk information from $ComputerName. $($_.exception.message)"
         #bail out
         Return
     }
@@ -41,7 +41,7 @@ Function Show-DriveUsage {
 
     Write-Host "`n$($disks[0].SystemName)"
     foreach ($disk in $disks) {
-        Write-Verbose ($disk | Select-Object DeviceID, Size, Freespace | Out-String)
+        Write-Verbose ($disk | Select-Object DeviceID, Size, FreeSpace | Out-String)
         #calculate %free but use a scale of 0 to 50
         [double]$pct = ($disk.FreeSpace / $disk.Size ) * 50
         [int]$used = 50 - $pct
@@ -69,6 +69,6 @@ Function Show-DriveUsage {
     } #foreach
 
     Write-Host "`n"
-    Write-Verbose "[END    ] Ending: $($MyInvocation.Mycommand)"
+    Write-Verbose "[END    ] Ending: $($MyInvocation.MyCommand)"
 
 }

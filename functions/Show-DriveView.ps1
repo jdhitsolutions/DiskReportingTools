@@ -1,19 +1,19 @@
-﻿Function Show-DriveView {
+Function Show-DriveView {
     [cmdletbinding()]
     Param(
         [Parameter(Position = 0, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [Alias("cn")]
-        [ValidateNotNullorEmpty()]
-        [string[]]$Computername = $env:COMPUTERNAME
+        [ValidateNotNullOrEmpty()]
+        [string[]]$ComputerName = $env:ComputerName
     )
 
     Begin {
-        Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.Mycommand)"
+        Write-Verbose "[BEGIN  ] Starting: $($MyInvocation.MyCommand)"
         #initialize an array to hold results
         $data = @()
 
         #mapping hashtable
-        $typemap = @{
+        $TypeMap = @{
             0 = "Unknown"
             1 = "NoRootDirectory"
             2 = "RemovableDisk"
@@ -27,20 +27,20 @@
 
     Process {
 
-        foreach ($computer in $Computername) {
+        foreach ($computer in $ComputerName) {
             Write-Verbose "[PROCESS] Querying $($Computer.toUpper())"
             Try {
                 $data += Get-CimInstance -class win32_logicaldisk -ComputerName $computer -ErrorAction Stop |
-                Select-Object @{Name = "Computername"; Expression = { $_.Systemname } },
+                Select-Object @{Name = "ComputerName"; Expression = { $_.SystemName } },
                 @{Name = "Drive"; Expression = { $_.DeviceID } },
-                @{Name = "Label"; Expression = { $_.volumename } },
-                @{Name = "Type"; Expression = { $typeMap.item($_.DriveType -as [int]) } },
+                @{Name = "Label"; Expression = { $_.VolumeName } },
+                @{Name = "Type"; Expression = { $TypeMap.item($_.DriveType -as [int]) } },
                 @{Name = "SizeGB"; Expression = { [int]($_.Size / 1GB) } },
-                @{Name = "FreeGB"; Expression = { [math]::Round($_.Freespace / 1GB, 2) } },
-                @{Name = "UsedGB"; Expression = { [math]::round(($_.size - $_.Freespace) / 1GB, 2) } },
-                @{Name = "Free%"; Expression = { [math]::round(($_.Freespace / $_.Size) * 100, 2) } },
+                @{Name = "FreeGB"; Expression = { [math]::Round($_.FreeSpace / 1GB, 2) } },
+                @{Name = "UsedGB"; Expression = { [math]::round(($_.size - $_.FreeSpace) / 1GB, 2) } },
+                @{Name = "Free%"; Expression = { [math]::round(($_.FreeSpace / $_.Size) * 100, 2) } },
                 @{Name = "FreeGraph"; Expression = {
-                        [int]$per = ($_.Freespace / $_.Size) * 100
+                        [int]$per = ($_.FreeSpace / $_.Size) * 100
                         "|" * $per }
                 }
             } #try
@@ -53,10 +53,10 @@
     } #process
 
     End {
-        #send the results to Out-Gridview
+        #send the results to Out-GridView
         $data | Out-GridView -Title "Drive Report"
 
-        Write-Verbose "[END    ] Ending: $($MyInvocation.Mycommand)"
+        Write-Verbose "[END    ] Ending: $($MyInvocation.MyCommand)"
     } #end
 
 }
