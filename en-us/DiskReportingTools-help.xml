@@ -11,7 +11,7 @@
     </command:details>
     <maml:description>
       <maml:para>This command uses the PowerShell console to display a colorized graph of disk usage. The graph will be color coded depending on the amount of free disk space. By default the command will display all fixed drives but you can limit output to a single drive.</maml:para>
-      <maml:para>NOTE: This command does NOT write anything to the pipeline.</maml:para>
+      <maml:para>This command writes an object to the pipeline, but the properties are ANSI formatted strings.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -28,14 +28,14 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="CN">
-          <maml:name>Computername</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="named" aliases="CN">
+          <maml:name>ComputerName</maml:name>
           <maml:description>
             <maml:para>The name of the computer to query. This command has aliases of: CN</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>$env:COMPUTERNAME</dev:defaultValue>
@@ -55,14 +55,14 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="CN">
-        <maml:name>Computername</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="named" aliases="CN">
+        <maml:name>ComputerName</maml:name>
         <maml:description>
           <maml:para>The name of the computer to query. This command has aliases of: CN</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>String[]</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>$env:COMPUTERNAME</dev:defaultValue>
@@ -86,7 +86,7 @@ D: \[|||||                                             \] 9.12%
 E: \[|||||||||||||||||||||||||||||||||||               \] 70.71%
 F: \[|||||||||||||||||||||||||                         \] 49.77%</dev:code>
         <dev:remarks>
-          <maml:para>The output would be colored for drives C: and D:, yellow for F: and green for E:</maml:para>
+          <maml:para>The output would be colored blocks for drives C: and D:, yellow for F: and green for E:</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
@@ -117,13 +117,13 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>This command will display a summary view of all local, fixed drives.</maml:para>
+      <maml:para>This command will display a summary view of all local, fixed drives. The default behavior is to send the output to Out-GridView. But if you are running PowerShell 7 and have the Microsoft.PowerShell.ConsoleGuiTools module installed, you can use the dynamic ConsoleGridView parameter.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Show-DriveView</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn">
-          <maml:name>Computername</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="CN">
+          <maml:name>ComputerName</maml:name>
           <maml:description>
             <maml:para>The name of a remote computer.</maml:para>
           </maml:description>
@@ -134,11 +134,23 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
           </dev:type>
           <dev:defaultValue>Localhost</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>Specify the grid title.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Drive Report</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="cn">
-        <maml:name>Computername</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="CN">
+        <maml:name>ComputerName</maml:name>
         <maml:description>
           <maml:para>The name of a remote computer.</maml:para>
         </maml:description>
@@ -148,6 +160,18 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>Localhost</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>Specify the grid title.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Drive Report</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -163,7 +187,7 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>System.Object</maml:name>
+          <maml:name>None</maml:name>
         </dev:type>
         <maml:description>
           <maml:para></maml:para>
@@ -180,7 +204,16 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Show-DriveView</dev:code>
         <dev:remarks>
-          <maml:para></maml:para>
+          <maml:para>This will show all drives on the local computer in an Out-GridView.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 --------------------------</maml:title>
+        <dev:code>`
+
+PS C:\&gt; Get-Content C:\scripts\company.txt | Show-DriveView -Title "Company Servers" -cgv</dev:code>
+        <dev:remarks>
+          <maml:para>Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for ConsoleGridView.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

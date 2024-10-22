@@ -14,7 +14,7 @@ Display a colorized graph of disk usage
 ## SYNTAX
 
 ```yaml
-Show-DriveUsage [[-Drive] <String>] [-Computername <String>] [<CommonParameters>]
+Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,7 +23,7 @@ This command uses the PowerShell console to display a colorized graph of disk us
 The graph will be color coded depending on the amount of free disk space.
 By default the command will display all fixed drives but you can limit output to a single drive.
 
-NOTE: This command does NOT write anything to the pipeline.
+This command writes an object to the pipeline, but the properties are ANSI formatted strings.
 
 ## EXAMPLES
 
@@ -39,7 +39,7 @@ E: \[|||||||||||||||||||||||||||||||||||               \] 70.71%
 F: \[|||||||||||||||||||||||||                         \] 49.77%
 ```
 
-The output would be colored for drives C: and D:, yellow for F: and green for E:
+The output would be colored blocks for drives C: and D:, yellow for F: and green for E:
 
 ### EXAMPLE 2
 
@@ -69,20 +69,20 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Computername
+### -ComputerName
 
 The name of the computer to query.
 This command has aliases of: CN
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases: CN
 
 Required: False
 Position: Named
 Default value: $env:COMPUTERNAME
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 

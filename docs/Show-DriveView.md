@@ -14,12 +14,12 @@ Display a summary view of all drives.
 ## SYNTAX
 
 ```yaml
-Show-DriveView [[-Computername] <String[]>] [<CommonParameters>]
+Show-DriveView [[-ComputerName] <String[]>] [-Title <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-This command will display a summary view of all local, fixed drives.
+This command will display a summary view of all local, fixed drives. The default behavior is to send the output to Out-GridView. But if you are running PowerShell 7 and have the Microsoft.PowerShell.ConsoleGuiTools module installed, you can use the dynamic ConsoleGridView parameter.
 
 ## EXAMPLES
 
@@ -29,21 +29,47 @@ This command will display a summary view of all local, fixed drives.
 PS C:\> Show-DriveView
 ```
 
+This will show all drives on the local computer in an Out-GridView.
+
+### Example 2
+
+```powershell`
+
+PS C:\> Get-Content C:\scripts\company.txt | Show-DriveView -Title "Company Servers" -cgv
+```
+
+Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for ConsoleGridView.
+
 ## PARAMETERS
 
-### -Computername
+### -ComputerName
 
 The name of a remote computer.
 
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases: cn
+Aliases: CN
 
 Required: False
 Position: 0
 Default value: Localhost
 Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -Title
+Specify the grid title.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: Drive Report
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -57,7 +83,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Object
+### None
 
 ## NOTES
 

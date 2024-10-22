@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <ViewDefinitions>
+        <View>
+            <Name>default</Name>
+            <ViewSelectedBy>
+                <TypeName>PSDriveUsage</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                             <ExpressionBinding>
+                                <PropertyName>Computername</PropertyName>
+                            </ExpressionBinding>
+                             <NewLine/>
+                             <ExpressionBinding>
+                                <ScriptBlock>
+                                    $_.Drives | foreach-object { "  $_"} | Out-String
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                          </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
