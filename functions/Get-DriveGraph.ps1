@@ -9,10 +9,18 @@ Function Show-DriveUsage {
             'Q:', 'R:', 'S:', 'T:', 'U:', 'V:', 'W:', 'X:', 'Y:', 'Z:')]
         [string]$Drive,
 
-        [Parameter(ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Parameter(
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName,
+            HelpMessage = 'Specify the name of a remote computer. You must have admin rights. The default is the localhost.'
+        )]
         [ValidateNotNullOrEmpty()]
         [Alias('CN')]
-        [string[]]$ComputerName = $env:ComputerName
+        [string[]]$ComputerName = $env:ComputerName,
+
+        [parameter(HelpMessage = 'Specify an alternate credential.')]
+        [ValidateNotNullOrEmpty()]
+        [PSCredential]$Credential
     )
 
     Begin {
@@ -49,8 +57,15 @@ Function Show-DriveUsage {
         ForEach ($computer in $ComputerName) {
             Try {
                 _verbose -message ($strings.QueryComputer -f $Computer.toUpper())
-
-                $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter $Filter -ComputerName $Computer -ErrorAction Stop
+                #create a temporary CIM session
+                If ($Credential) {
+                    _verbose ($strings.RunAs -f $Credential.UserName)
+                    $cs = New-CimSession -ComputerName $Computer -Credential $Credential -ErrorAction Stop
+                }
+                else {
+                    $cs = New-CimSession -ComputerName $Computer -ErrorAction Stop
+                }
+                $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter $Filter -CimSession $cs -ErrorAction Stop
             }
             Catch {
                 Write-Warning ($strings.DiskFailure -f $ComputerName, $_.exception.message)
@@ -63,7 +78,7 @@ Function Show-DriveUsage {
 
             $h = [ordered]@{
                 PSTypeName   = 'PSDriveUsage'
-                ComputerName = '{0}{1}{2}{3}' -f $bold,$italic,$disks[0].SystemName, $reset
+                ComputerName = '{0}{1}{2}{3}' -f $bold, $italic, $disks[0].SystemName, $reset
             }
 
             $diskInfo = @()
@@ -92,12 +107,16 @@ Function Show-DriveUsage {
                     $fgColor = $red
                 }
 
-                $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset,(' '*$used), $fgColor, $DisplayPct
+                $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset, (' ' * $used), $fgColor, $DisplayPct
                 $diskInfo += $di
 
             } #foreach
             $h.Add('Drives', $diskInfo)
-            New-Object PSObject -property $h
+            New-Object PSObject -Property $h
+
+            if ($cs) {
+                $cs | Remove-CimSession -ErrorAction SilentlyContinue
+            }
         }  #foreach computer
     } #process
     End {

@@ -4,13 +4,18 @@ Function Show-DriveView {
         [Parameter(
             Position = 0,
             ValueFromPipeline,
-            ValueFromPipelineByPropertyName
+            ValueFromPipelineByPropertyName,
+            HelpMessage = "Specify the name of a remote computer. You must have admin rights. The default is the localhost."
         )]
         [Alias('CN')]
         [ValidateNotNullOrEmpty()]
         [string[]]$ComputerName = $env:ComputerName,
         [Parameter(HelpMessage = "Specify the grid title")]
-        [string]$Title = 'Drive Report'
+        [ValidateNotNullOrEmpty()]
+        [string]$Title = 'Drive Report',
+        [parameter(HelpMessage = 'Specify an alternate credential.')]
+        [ValidateNotNullOrEmpty()]
+        [PSCredential]$Credential
     )
     DynamicParam {
         # This will imply PowerShell 7
@@ -72,7 +77,15 @@ Function Show-DriveView {
         foreach ($computer in $ComputerName) {
             _verbose -message ($strings.QueryComputer -f $Computer.toUpper())
             Try {
-                $data += Get-CimInstance -class win32_logicaldisk -ComputerName $computer -ErrorAction Stop |
+                  #create a temporary CIM session
+                If ($Credential) {
+                    _verbose ($strings.RunAs -f $Credential.UserName)
+                    $cs = New-CimSession -ComputerName $Computer -Credential $Credential -ErrorAction Stop
+                }
+                else {
+                    $cs = New-CimSession -ComputerName $Computer -ErrorAction Stop
+                }
+                $data += Get-CimInstance -class win32_logicaldisk -CimSession $cs -ErrorAction Stop |
                 Select-Object @{Name = 'ComputerName'; Expression = { $_.SystemName } },
                 @{Name = 'Drive'; Expression = { $_.DeviceID } },
                 @{Name = 'Type'; Expression = { $TypeMap.item($_.DriveType -as [int]) } },
@@ -88,6 +101,9 @@ Function Show-DriveView {
             } #try
             Catch {
                 Write-Error "[$($Computer.toUpper())] $($_.exception.message)"
+            }
+            if ($cs) {
+                $cs | Remove-CimSession -ErrorAction SilentlyContinue
             }
         } #foreach
 

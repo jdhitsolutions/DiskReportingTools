@@ -1,7 +1,7 @@
 ---
 external help file: DiskReportingTools-help.xml
 Module Name: DiskReportingTools
-online version:
+online version: https://jdhitsolutions.com/yourls/aac2ca
 schema: 2.0.0
 ---
 
@@ -14,7 +14,7 @@ Display a summary view of all drives.
 ## SYNTAX
 
 ```yaml
-Show-DriveView [[-ComputerName] <String[]>] [-Title <String>] [<CommonParameters>]
+Show-DriveView [[-ComputerName] <String[]>] [-Title <String>] [-Credential <PSCredential>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -33,8 +33,7 @@ This will show all drives on the local computer in an Out-GridView.
 
 ### Example 2
 
-```powershell`
-
+```powershell
 PS C:\> Get-Content C:\scripts\company.txt | Show-DriveView -Title "Company Servers" -cgv
 ```
 
@@ -59,6 +58,7 @@ Accept wildcard characters: False
 ```
 
 ### -Title
+
 Specify the grid title.
 
 ```yaml
@@ -69,6 +69,22 @@ Aliases:
 Required: False
 Position: Named
 Default value: Drive Report
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Credential
+
+Specify an alternate credential.
+
+```yaml
+Type: PSCredential
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -87,6 +103,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
-Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter
 
 ## RELATED LINKS
+
+[Show-DriveUsage](Show-DriveUsage.md)

@@ -1,27 +1,34 @@
-<#
-Get-Content c:\work\servers.txt | New-HTMLDriveReport -Title "Company Drive Report" -Path D:\temp\drivereport.html -Verbose -HeadingTitle "Company Server Disk Report<br>October 2024"
-#>
-Function New-HTMLDriveReport {
+Function New-HtmlDriveReport {
   [cmdletbinding()]
-
+  [OutputType('None','System.IO.FileInfo')]
   Param (
     [Parameter(
       Position = 0,
       ValueFromPipeline,
-      HelpMessage = 'Specify the name of a remote computer. You must have admin rights.'
+      HelpMessage = 'Specify the name of a remote computer. You must have admin rights. The default is the localhost.'
     )]
     [ValidateNotNullOrEmpty()]
     [string[]]$ComputerName = $env:ComputerName,
+
+    [parameter(HelpMessage = 'Specify an alternate credential.')]
+    [ValidateNotNullOrEmpty()]
+    [PSCredential]$Credential,
+
     [Parameter(HelpMessage = 'Specify the page title for the HTML report')]
     [alias("Title")]
     [ValidateNotNullOrEmpty()]
     [string]$ReportTitle = 'Drive Report',
+
     [Parameter(HelpMessage = 'Specify the heading title for the HTML report. This will be displayed at the top of the page.')]
     [ValidateNotNullOrEmpty()]
     [string]$HeadingTitle = "Drive Report",
+
     [Parameter(HelpMessage = 'Specify the file name and path for the HTML report')]
     [ValidateNotNullOrEmpty()]
-    [string]$Path = 'DriveReport.html'
+    [string]$Path = 'DriveReport.html',
+
+    [Parameter(HelpMessage = 'Get the report file.')]
+    [switch]$Passthru
   )
 
   Begin {
@@ -44,7 +51,7 @@ Function New-HTMLDriveReport {
     $head = @"
   <style>
   body { background-color:#FFFFCC;
-         font-family:font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+         font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
          font-size:10pt; }
   td, th { border:1px solid #000033;
            border-collapse:collapse; }
@@ -67,8 +74,16 @@ Function New-HTMLDriveReport {
     ForEach ($computer in $ComputerName) {
       _verbose ($strings.QueryComputer -f $Computer.toUpper())
       Try {
+        #create a temporary CIM session
+        If ($Credential) {
+          _verbose ($strings.RunAs -f $Credential.UserName)
+          $cs = New-CimSession -ComputerName $Computer -Credential $Credential -ErrorAction Stop
+        }
+        else {
+          $cs = New-CimSession -ComputerName $Computer -ErrorAction Stop
+        }
         #get the drive data
-        $data = Get-CimInstance -ClassName Win32_logicaldisk -Filter 'DriveType=3' -computer $Computer -ErrorAction Stop
+        $data = Get-CimInstance -ClassName Win32_LogicalDisk -Filter 'DriveType=3' -CimSession $cs -ErrorAction Stop
       }
       Catch {
         Write-Warning ($strings.DiskFailure -f $Computer.ToUpper(), $_.exception.message)
@@ -82,7 +97,6 @@ Function New-HTMLDriveReport {
         #iterate through each group object
 
         ForEach ($computer in $groups) {
-
           $fragments += "<H3>$($computer.Name)</H3>"
 
           #define a collection of drives from the group object
@@ -114,6 +128,9 @@ Function New-HTMLDriveReport {
           #insert a return between each computer
           $fragments += '</p>'
 
+          if ($cs) {
+            $cs | Remove-CimSession -ErrorAction SilentlyContinue
+          }
         } #foreach computer
       } #if data
     }
@@ -131,8 +148,11 @@ Function New-HTMLDriveReport {
     #write the result to a file
     _verbose ($strings.HTMLFile -f $Path)
     ConvertTo-Html -Head $head -Body $fragments | Out-File -FilePath $Path
+    If ($Passthru) {
+      #return the file path
+      Get-Item -path $Path
+    }
     _verbose $strings.Ending
   } #end
-
 
 }

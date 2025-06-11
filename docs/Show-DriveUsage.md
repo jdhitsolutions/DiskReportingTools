@@ -1,7 +1,7 @@
 ---
 external help file: DiskReportingTools-help.xml
 Module Name: DiskReportingTools
-online version:
+online version: https://jdhitsolutions.com/yourls/029bca
 schema: 2.0.0
 ---
 
@@ -14,7 +14,8 @@ Display a colorized graph of disk usage
 ## SYNTAX
 
 ```yaml
-Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [<CommonParameters>]
+Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -86,6 +87,22 @@ Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
+### -Credential
+
+Specify an alternate credential.
+
+```yaml
+Type: PSCredential
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
@@ -96,8 +113,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
-Learn more about PowerShell: http://jdhitsolutions.com/blog/essential-powershell-resources/
+Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter
 
 ## RELATED LINKS
 
-[Get-CimInstance]()
+[Show-DriveView](Show-DriveView.md)
