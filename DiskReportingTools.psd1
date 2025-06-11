@@ -22,7 +22,7 @@
     VariablesToExport    = 'DiskReportingANSI', 'DiskReportingModule'
     PrivateData          = @{
         PSData = @{
-            Tags                     = @('disk', 'reporting', 'visualization', 'html', 'drive', 'recycle bin')
+            Tags                     = @('disk', 'reporting', 'visualization', 'html', 'drive', 'RecycleBin')
             LicenseUri               = 'https://github.com/jdhitsolutions/DiskReportingTools/blob/main/License.txt'
             ProjectUri               = 'https://github.com/jdhitsolutions/DiskReportingTools'
             #IconUri = ''
