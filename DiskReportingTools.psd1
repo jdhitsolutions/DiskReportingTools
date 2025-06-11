@@ -25,7 +25,7 @@
             Tags                     = @('disk', 'reporting', 'visualization', 'html', 'drive', 'recycle bin')
             LicenseUri               = 'https://github.com/jdhitsolutions/DiskReportingTools/blob/main/License.txt'
             ProjectUri               = 'https://github.com/jdhitsolutions/DiskReportingTools'
-            IconUri = ''
+            #IconUri = ''
             ReleaseNotes = @"
 # DiskReportingTools
 ## 0.10.0
