@@ -7,10 +7,14 @@ Function New-HtmlDriveReport {
       ValueFromPipeline,
       HelpMessage = 'Specify the name of a remote computer. You must have admin rights. The default is the localhost.'
     )]
+    [Alias("CN")]
     [ValidateNotNullOrEmpty()]
     [string[]]$ComputerName = $env:ComputerName,
 
-    [parameter(HelpMessage = 'Specify an alternate credential.')]
+    [Parameter(
+      ValueFromPipelineByPropertyName,
+      HelpMessage = 'Specify an alternate credential for the remote computer.'
+    )]
     [ValidateNotNullOrEmpty()]
     [PSCredential]$Credential,
 

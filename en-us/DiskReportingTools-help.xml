@@ -15,7 +15,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-RecycleBinSize</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="CN">
           <maml:name>ComputerName</maml:name>
           <maml:description>
             <maml:para>Specify the name of a remote computer</maml:para>
@@ -27,7 +27,7 @@
           </dev:type>
           <dev:defaultValue>localhost</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>Specify an alternate credential.</maml:para>
@@ -42,7 +42,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="CN">
         <maml:name>ComputerName</maml:name>
         <maml:description>
           <maml:para>Specify the name of a remote computer</maml:para>
@@ -54,7 +54,7 @@
         </dev:type>
         <dev:defaultValue>localhost</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>Specify an alternate credential.</maml:para>
@@ -126,7 +126,12 @@ C:    301.09</dev:code>
         </dev:remarks>
       </command:example>
     </command:examples>
-    <command:relatedLinks />
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://jdhitsolutions.com/yourls/086fc2</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
@@ -143,7 +148,7 @@ C:    301.09</dev:code>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>New-HtmlDriveReport</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="CN">
           <maml:name>ComputerName</maml:name>
           <maml:description>
             <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost</maml:para>
@@ -202,7 +207,7 @@ C:    301.09</dev:code>
           </dev:type>
           <dev:defaultValue>Drive Report</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>Specify an alternate credential.</maml:para>
@@ -217,7 +222,7 @@ C:    301.09</dev:code>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="0" aliases="CN">
         <maml:name>ComputerName</maml:name>
         <maml:description>
           <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost</maml:para>
@@ -277,7 +282,7 @@ C:    301.09</dev:code>
         </dev:type>
         <dev:defaultValue>Drive Report</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>Specify an alternate credential.</maml:para>
@@ -385,7 +390,7 @@ Mode                 LastWriteTime         Length Name
           </dev:type>
           <dev:defaultValue>$env:COMPUTERNAME</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>Specify an alternate credential.</maml:para>
@@ -396,6 +401,17 @@ Mode                 LastWriteTime         Length Name
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:description>
+            <maml:para>Display raw output without formatting.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -424,7 +440,7 @@ Mode                 LastWriteTime         Length Name
         </dev:type>
         <dev:defaultValue>$env:COMPUTERNAME</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>Specify an alternate credential.</maml:para>
@@ -436,9 +452,71 @@ Mode                 LastWriteTime         Length Name
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:description>
+          <maml:para>Display raw output without formatting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
-    <command:inputTypes />
-    <command:returnValues />
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String[]</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSCredential</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Int32</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PSDriveUsageRaw</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
     <maml:alertSet>
       <maml:alert>
         <maml:para>Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter</maml:para>
@@ -446,7 +524,7 @@ Mode                 LastWriteTime         Length Name
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Show-DriveUsage
 
 WIN10-ENT-01
@@ -459,13 +537,34 @@ F: \[|||||||||||||||||||||||||                         \] 49.77%</dev:code>
         </dev:remarks>
       </command:example>
       <command:example>
-        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Show-DriveUsage -computer chi-dc04 -drive c:
 
 CHI-DC04
 C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 3 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; $r = Show-DriveUsage -ComputerName Win10 -Raw
+PS C:\&gt; $r
+
+ComputerName Drives
+------------ ------
+WIN10        {@{VolumeName=; DeviceID=C:; Size=135951020032; FreeSpace=84002979840; PercentageFree…
+
+PS C:\&gt; $r.drives
+
+VolumeName     :
+DeviceID       : C:
+Size           : 135951020032
+FreeSpace      : 84002979840
+PercentageFree : 30.8945750536581
+Compressed     : False</dev:code>
+        <dev:remarks>
+          <maml:para>Return raw data so you can create your own formatting or visualization.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -519,7 +618,7 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
           </dev:type>
           <dev:defaultValue>Drive Report</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
           <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>Specify an alternate credential.</maml:para>
@@ -530,6 +629,17 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:description>
+            <maml:para>Display raw output without formatting.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
@@ -558,7 +668,7 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
         </dev:type>
         <dev:defaultValue>Drive Report</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
         <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>Specify an alternate credential.</maml:para>
@@ -570,6 +680,18 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:description>
+          <maml:para>Display raw output without formatting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -580,11 +702,27 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
           <maml:para></maml:para>
         </maml:description>
       </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSCredential</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
     </command:inputTypes>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
           <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PSObject</maml:name>
         </dev:type>
         <maml:description>
           <maml:para></maml:para>
@@ -608,7 +746,22 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
         <maml:title>-------------------------- Example 2 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Get-Content C:\scripts\company.txt | Show-DriveView -Title "Company Servers" -cgv</dev:code>
         <dev:remarks>
-          <maml:para>Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for ConsoleGridView.</maml:para>
+          <maml:para>Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for the dynamic parameter ConsoleGridView. This implies a PowerShell 7 environment with the Microsoft.PowerShell.ConsoleGuiTools module installed. The output will be a ConsoleGridView window with the title "Company Servers".</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 3 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Show-DriveView -ComputerName DOM1 -Raw
+
+ComputerName : DOM1
+DeviceID     : C:
+Type         : LocalDisk
+Size         : 135951020032
+FreeSpace    : 119664275456
+UsedSpace    : 16286744576
+Free%        : 88.02</dev:code>
+        <dev:remarks>
+          <maml:para>Get raw data for your own processing and formatting.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -616,6 +769,249 @@ C: \[|||||||||||||||||||||||||                         \] 49.63%</dev:code>
       <maml:navigationLink>
         <maml:linkText>Online Version:</maml:linkText>
         <maml:uri>https://jdhitsolutions.com/yourls/aac2ca</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Show-DriveUsage</maml:linkText>
+        <maml:uri></maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Show-FolderUsage</command:name>
+      <command:verb>Show</command:verb>
+      <command:noun>FolderUsage</command:noun>
+      <maml:description>
+        <maml:para>Show folder usage by file extension.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Use this cmdlet to show folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the -Threshold parameter.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Show-FolderUsage</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Specify the path to the folder to analyze. Use a full file system path</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="CN">
+          <maml:name>ComputerName</maml:name>
+          <maml:description>
+            <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+          <maml:name>Credential</maml:name>
+          <maml:description>
+            <maml:para>Specify an alternate credential for the remote computer.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCredential</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:description>
+            <maml:para>Display raw output without formatting.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+          <maml:name>Threshold</maml:name>
+          <maml:description>
+            <maml:para>Specify the minimum percentage to display. The default is 5%</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>5</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="CN">
+        <maml:name>ComputerName</maml:name>
+        <maml:description>
+          <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>Credential</maml:name>
+        <maml:description>
+          <maml:para>Specify an alternate credential for the remote computer.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCredential</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Specify the path to the folder to analyze. Use a full file system path</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:description>
+          <maml:para>Display raw output without formatting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <maml:name>Threshold</maml:name>
+        <maml:description>
+          <maml:para>Specify the minimum percentage to display. The default is 5%</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>5</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String[]</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSCredential</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Int32</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>PSCustomObject</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para>Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter</maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Show-FolderUsage c:\temp
+
+[PROSPERO] C:\Temp
+
+.mp3 [████████                                             ] 17.54%
+.zip [███████████████████                                  ] 38.33%
+.m4a [████████                                             ] 18.93%
+.csv [████                                                 ] 8.41%</dev:code>
+        <dev:remarks>
+          <maml:para>The output will be color formatted and styled.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Show-FolderUsage c:\scripts -ComputerName win10 -Raw | Format-Table
+
+Name       Count     Size     Total   Pct Path       ComputerName
+----       -----     ----     -----   --- ----       ------------
+.gitignore     1   658.00 127583.00  0.52 C:\Scripts WIN10
+.md            7 11212.00 127583.00  8.79 C:\Scripts WIN10
+.psd1          2  2277.00 127583.00  1.78 C:\Scripts WIN10
+.psm1          1  1770.00 127583.00  1.39 C:\Scripts WIN10
+.html          1  1873.00 127583.00  1.47 C:\Scripts WIN10
+.txt           2  2316.00 127583.00  1.82 C:\Scripts WIN10
+.ps1           9 20647.00 127583.00 16.18 C:\Scripts WIN10
+.json          4  5322.00 127583.00  4.17 C:\Scripts WIN10
+.xml           1 25339.00 127583.00 19.86 C:\Scripts WIN10
+.ps1xml        2  2730.00 127583.00  2.14 C:\Scripts WIN10
+.png           1 53439.00 127583.00 41.89 C:\Scripts WIN10</dev:code>
+        <dev:remarks>
+          <maml:para>Get the raw data so that you can do you own formatting or visualization.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://jdhitsolutions.com/yourls/c09320</maml:uri>
       </maml:navigationLink>
       <maml:navigationLink>
         <maml:linkText>Show-DriveUsage</maml:linkText>

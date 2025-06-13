@@ -10,9 +10,13 @@ Function Get-RecycleBinSize {
             HelpMessage = 'Specify the name of a remote computer. You must have admin rights. The default is the localhost.'
         )]
         [ValidateNotNullOrEmpty()]
+        [Alias("CN")]
         [string[]]$ComputerName = $env:COMPUTERNAME,
 
-        [parameter(HelpMessage = 'Specify an alternate credential.')]
+        [Parameter(
+            ValueFromPipelineByPropertyName,
+            HelpMessage = 'Specify an alternate credential for the remote computer.'
+        )]
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential
     )
@@ -43,14 +47,14 @@ Function Get-RecycleBinSize {
         }
         $PSBoundParameters.Add('ScriptBlock', $getSB)
         $PSBoundParameters.Add('HideComputerName', $true)
-        If ($Credential) {
-            _verbose ($strings.RunAs -f $Credential.UserName)
-        }
     } #begin
 
     Process {
         $PSDefaultParameterValues['_verbose:block'] = 'Process'
-
+        Write-Information $PSBoundParameters -Tags runtime
+        If ($Credential) {
+            _verbose ($strings.RunAs -f $Credential.UserName)
+        }
         foreach ($Computer in $ComputerName) {
             _verbose ($strings.RBSize -f $ComputerName.ToUpper())
             If (-Not ($PSBoundParameters.ContainsKey('ComputerName'))) {
@@ -62,6 +66,7 @@ Function Get-RecycleBinSize {
             $PSBoundParameters | Out-String | Write-Debug
             $r = Invoke-Command @PSBoundParameters
             if ($r) {
+                Write-Information $r -Tags data
                 $r | ForEach-Object {
                     #create a custom object
                     [PSCustomObject]@{

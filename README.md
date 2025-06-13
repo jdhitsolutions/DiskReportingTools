@@ -1,6 +1,12 @@
 # DiskReportingTools
 
-This PowerShell module contains a few functions you can use to generate reports or gather information about storage devices on your system. The module should work on Windows PowerShell and PowerShell 7 on Windows platforms. Install the module from the PowerShell Gallery.
+[![PSGallery Version](https://img.shields.io/powershellgallery/v/DiskReportingTools.png?style=for-the-badge&label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/DiskReportingTools/) [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/DiskReportingTools.png?style=for-the-badge&label=Downloads)](https://www.powershellgallery.com/packages/DiskReportingTools/)
+
+![Volume](images/Volume01.png)
+
+This PowerShell module contains a few functions you can use to generate reports or gather information about storage devices on your system. The module should work on Windows PowerShell 5.1 and PowerShell 7 on Windows platforms. The commands rely on the CIM cmdlets and traditional PowerShell remoting.
+
+Install the module from the PowerShell Gallery.
 
 ```powershell
 Install-PSResource DiskReportingTools
@@ -17,7 +23,8 @@ The module contains the following commands:
 | [Get-RecycleBinSize](docs/Get-RecycleBinSize.md) | *rbsz* | Get recycle bin size |
 | [New-HtmlDriveReport](docs/New-HtmlDriveReport.md) |  | Create a drive HTML report |
 | [Show-DriveUsage](docs/Show-DriveUsage.md) | *sdu* | Display a colorized graph of disk usage |
-| [Show-DriveView](docs/Show-DriveView.md) |  | Display a summary view of all drives. |
+| [Show-DriveView](docs/Show-DriveView.md) | *sdv* | Display a summary view of all drives. |
+| [Show-FolderUsage](docs/Show-FolderUsage.md) | *sfu* | Show folder usage by file extension |
 
 ### Get-RecycleBinSize
 
@@ -126,11 +133,94 @@ Show-DriveView -Title "Company Drive View" -ComputerName SRV1,SRV2,Dom1,Dom2 -Co
 
 ![Show-DriveView ConsoleGridView](images/console-driveview.png)
 
+### Show-FolderUsage
+
+This command will display folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the `-Threshold` parameter.
+
+![Show-FolderUsage](images/show-folderusage.png)
+
+## Raw Data
+
+Commands that visualize or customize the output should also have a `-Raw` parameter that will return the raw data as a PowerShell object. This is useful if you want to use the data in a script to create your own visualizations or reports.
+
+For example, you might want to use the charting features in the [pwshSpectreConsole](https://github.com/ShaunLawrie/PwshSpectreConsole) module to create a custom report.
+
+```powershell
+Param([string[]]$Computername = $env:COMPUTERNAME)
+
+$raw = Show-DriveUsage -ComputerName $Computername -Raw | Group-Object -Property ComputerName
+
+$panelTitle = "[Gold1]Drive Usage Percentage[/]"
+
+$out = @()
+foreach ($computer in $raw) {
+    $data = @()
+    foreach ($item in $computer.group.drives) {
+        [double]$pct =[math]::Round(100 - $item.PercentageFree,2)
+        if ($pct -ge 60) {
+            $color = 'LightGreen'
+        }
+        elseif ($pct -ge 40) {
+            $color = 'SandyBrown'
+        }
+        elseif ($pct -ge 20) {
+            $color = 'DarkOrange'
+        }
+        else {
+            $color = 'DarkMagenta'
+        }
+        $data += New-SpectreChartItem -Label $item.DeviceID -Value $pct -Color $color
+    }
+`
+$title = @"
+
+[HotPink Italic]$($Computer.name)[/]
+
+"@
+
+    $out+= Format-SpectreBarChart -Data $data -Label $title -width 75
+
+}
+
+#display as a panel
+$out | Format-SpectreColumns | Format-SpectrePanel -Title $panelTitle -Width 90 -Color Lime
+```
+
+![pwshSpectreConsole Report](images/spectreconsole-example.png)
+
 ## Other Features
 
 This module uses localization for Verbose and other messages. The module also uses a private helper function to display verbose messages using ANSI formatting.
 
 ![custom verbose message](images/custom-verbose.png)
+
+Some functions also support the information stream
+
+```powershell
+PS C:\> $r = Show-FolderUsage c:\scripts -ComputerName win10 -raw -InformationVariable v
+PS C:\> $v
+System.Management.Automation.PSBoundParametersDictionary
+System.Collections.Hashtable
+Total size: 127583 bytes
+System.Object[]
+PS C:\> $v[1].MessageData
+
+Name                           Value
+----                           -----
+ComputerName                   win10
+HideComputerName               True
+ArgumentList                   c:\scripts
+ErrorAction                    Stop
+ScriptBlock                    …
+PS C:\> $v[-1].MessageData[0]
+
+Name       : .gitignore
+Count      : 1
+Size       : 658
+RunspaceId : 7bfadb82-b177-4748-9232-c554590b17c2
+Total      : 127583
+Pct        : 0.515742692992013
+```
 
 ## Feedback
 

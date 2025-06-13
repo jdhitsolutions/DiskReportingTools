@@ -13,8 +13,17 @@ Display a summary view of all drives.
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+
 ```yaml
 Show-DriveView [[-ComputerName] <String[]>] [-Title <String>] [-Credential <PSCredential>] [<CommonParameters>]
+```
+
+### raw
+
+```yaml
+Show-DriveView [[-ComputerName] <String[]>] [-Title <String>] [-Credential <PSCredential>] [-Raw]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -37,7 +46,23 @@ This will show all drives on the local computer in an Out-GridView.
 PS C:\> Get-Content C:\scripts\company.txt | Show-DriveView -Title "Company Servers" -cgv
 ```
 
-Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for ConsoleGridView.
+Get the server names from a text file and pipe them to Show-DriveView. This example is using the parameter alias for the dynamic parameter ConsoleGridView. This implies a PowerShell 7 environment with the Microsoft.PowerShell.ConsoleGuiTools module installed. The output will be a ConsoleGridView window with the title "Company Servers".
+
+### Example 3
+
+```powershell
+PS C:\> Show-DriveView -ComputerName DOM1 -Raw
+
+ComputerName : DOM1
+DeviceID     : C:
+Type         : LocalDisk
+Size         : 135951020032
+FreeSpace    : 119664275456
+UsedSpace    : 16286744576
+Free%        : 88.02
+```
+
+Get raw data for your own processing and formatting.
 
 ## PARAMETERS
 
@@ -85,6 +110,22 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Raw
+
+Display raw output without formatting.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: raw
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -97,9 +138,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.String[]
 
+### System.Management.Automation.PSCredential
+
 ## OUTPUTS
 
 ### None
+
+### PSObject
 
 ## NOTES
 

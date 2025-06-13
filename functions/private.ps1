@@ -33,3 +33,11 @@ function _verbose {
 
 }
 
+Function _toTitleCase {
+    param (
+        [string]$Text
+    )
+
+    (Get-Culture).TextInfo.ToTitleCase($Text)
+}
+

@@ -13,8 +13,17 @@ Display a colorized graph of disk usage
 
 ## SYNTAX
 
+### __AllParameterSets (Default)
+
 ```yaml
 Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>]
+ [<CommonParameters>]
+```
+
+### raw
+
+```yaml
+Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>] [-Raw]
  [<CommonParameters>]
 ```
 
@@ -28,7 +37,7 @@ This command writes an object to the pipeline, but the properties are ANSI forma
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### Example 1
 
 ```powershell
 PS C:\> Show-DriveUsage
@@ -42,7 +51,7 @@ F: \[|||||||||||||||||||||||||                         \] 49.77%
 
 The output would be colored blocks for drives C: and D:, yellow for F: and green for E:
 
-### EXAMPLE 2
+### Example 2
 
 ```powershell
 PS C:\> Show-DriveUsage -computer chi-dc04 -drive c:
@@ -50,6 +59,28 @@ PS C:\> Show-DriveUsage -computer chi-dc04 -drive c:
 CHI-DC04
 C: \[|||||||||||||||||||||||||                         \] 49.63%
 ```
+
+### Example 3
+
+```powershell
+PS C:\> $r = Show-DriveUsage -ComputerName Win10 -Raw
+PS C:\> $r
+
+ComputerName Drives
+------------ ------
+WIN10        {@{VolumeName=; DeviceID=C:; Size=135951020032; FreeSpace=84002979840; PercentageFree…
+
+PS C:\> $r.drives
+
+VolumeName     :
+DeviceID       : C:
+Size           : 135951020032
+FreeSpace      : 84002979840
+PercentageFree : 30.8945750536581
+Compressed     : False
+```
+
+Return raw data so you can create your own formatting or visualization.
 
 ## PARAMETERS
 
@@ -99,6 +130,22 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Raw
+
+Display raw output without formatting.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: raw
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -109,7 +156,19 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### System.String
+
+### System.String[]
+
+### System.Management.Automation.PSCredential
+
+### System.Int32
+
 ## OUTPUTS
+
+### String
+
+### PSDriveUsageRaw
 
 ## NOTES
 

@@ -13,4 +13,5 @@ ConvertFrom-StringData @"
     HTMLFile = Writing HTML report to {0}
     RBSize = Getting recycle bin size information for {0}
     RunAs = Using alternate credentials for {0}
+    FolderUsage = Getting folder usage information for {0} on {1}
 "@

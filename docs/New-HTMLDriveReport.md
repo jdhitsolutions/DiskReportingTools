@@ -46,7 +46,7 @@ The default is the localhost
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases:
+Aliases: CN
 
 Required: False
 Position: 0
@@ -132,7 +132,7 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 

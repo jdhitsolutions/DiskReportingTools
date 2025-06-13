@@ -1,6 +1,7 @@
 Function Show-DriveUsage {
-    [cmdletbinding()]
-    [OutputType('PSDriveUsage')]
+    [cmdletbinding(DefaultParameterSetName = '__AllParameterSets')]
+    [OutputType('PSDriveUsageRaw',ParameterSetName='raw')]
+    [OutputType('PSDriveUsage',ParameterSetName='__AllParameterSets')]
     [alias('sdu')]
     Param(
         [Parameter(Position = 0)]
@@ -18,9 +19,15 @@ Function Show-DriveUsage {
         [Alias('CN')]
         [string[]]$ComputerName = $env:ComputerName,
 
-        [parameter(HelpMessage = 'Specify an alternate credential.')]
+        [Parameter(
+            ValueFromPipelineByPropertyName,
+            HelpMessage = 'Specify an alternate credential for the remote computer.'
+        )]
         [ValidateNotNullOrEmpty()]
-        [PSCredential]$Credential
+        [PSCredential]$Credential,
+
+        [Parameter(ParameterSetName = 'raw', HelpMessage = 'Display raw output without formatting.')]
+        [switch]$Raw
     )
 
     Begin {
@@ -40,20 +47,10 @@ Function Show-DriveUsage {
             $filter = 'DriveType = 3'
         }
 
-        #define ANSI escape sequences for color
-        $green = "$([char]27)[92m"
-        $yellow = "$([char]27)[38;5;226m"
-        $red = "$([char]27)[38;5;197m"
-        $greenBG = "$([char]27)[42m"
-        $yellowBG = "$([char]27)[48;5;226m"
-        $redBG = "$([char]27)[48;5;197m"
-        $Reset = "$([char]27)[0m"
-        $bold = "$([char]27)[1m"
-        $italic = "$([char]27)[3m"
     } #begin
     Process {
         $PSDefaultParameterValues['_verbose:block'] = 'Process'
-
+        Write-Information $PSBoundParameters -Tags runtime
         ForEach ($computer in $ComputerName) {
             Try {
                 _verbose -message ($strings.QueryComputer -f $Computer.toUpper())
@@ -65,7 +62,9 @@ Function Show-DriveUsage {
                 else {
                     $cs = New-CimSession -ComputerName $Computer -ErrorAction Stop
                 }
+
                 $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter $Filter -CimSession $cs -ErrorAction Stop
+                Write-Information $disks -Tags data
             }
             Catch {
                 Write-Warning ($strings.DiskFailure -f $ComputerName, $_.exception.message)
@@ -76,9 +75,17 @@ Function Show-DriveUsage {
             #display symbol
             $sym = ' '
 
+            if ($Raw) {
+               $cn = $disks[0].SystemName
+               $typeName = 'PSDriveUsageRaw'
+            }
+            else {
+                $cn = "{0}{1}{2}{3}" -f $bold, $italic, $disks[0].SystemName, $reset
+                $typeName = 'PSDriveUsage'
+            }
             $h = [ordered]@{
-                PSTypeName   = 'PSDriveUsage'
-                ComputerName = '{0}{1}{2}{3}' -f $bold, $italic, $disks[0].SystemName, $reset
+                PSTypeName   = $typeName
+                ComputerName =  $cn
             }
 
             $diskInfo = @()
@@ -87,6 +94,10 @@ Function Show-DriveUsage {
                 Write-Debug ($disk | Select-Object DeviceID, Size, FreeSpace | Out-String)
                 #calculate %free but use a scale of 0 to 50
                 [double]$pct = ($disk.FreeSpace / $disk.Size ) * 50
+                if ($Raw) {
+                    #add the percentage to the disk object
+                    $disk | Add-Member -MemberType NoteProperty -Name 'PercentageFree' -Value $pct
+                }
                 [int]$used = 50 - $pct
 
                 #show the actual percentage
@@ -107,11 +118,18 @@ Function Show-DriveUsage {
                     $fgColor = $red
                 }
 
-                $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset, (' ' * $used), $fgColor, $DisplayPct
+                if ($raw) {
+                    $di = $disk | Select-Object -Property VolumeName,DeviceID,Size,FreeSpace,PercentageFree,Compressed
+                }
+                else {
+                    $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset, (' ' * $used), $fgColor, $DisplayPct
+                }
                 $diskInfo += $di
 
             } #foreach
+
             $h.Add('Drives', $diskInfo)
+
             New-Object PSObject -Property $h
 
             if ($cs) {

@@ -1,7 +1,7 @@
 ---
 external help file: DiskReportingTools-help.xml
 Module Name: DiskReportingTools
-online version:
+online version: https://jdhitsolutions.com/yourls/086fc2
 schema: 2.0.0
 ---
 
@@ -66,7 +66,7 @@ Specify the name of a remote computer
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases:
+Aliases: CN
 
 Required: False
 Position: 0
@@ -87,7 +87,7 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
