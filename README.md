@@ -4,7 +4,7 @@
 
 ![Volume](images/Volume01.png)
 
-This PowerShell module contains a few functions you can use to generate reports or gather information about storage devices on your system. The module should work on Windows PowerShell 5.1 and PowerShell 7 on Windows platforms. The commands rely on the CIM cmdlets and traditional PowerShell remoting.
+This PowerShell module containsfunct ions to generate reports or gather information about storage devices. The module should work on Windows PowerShell 5.1 and PowerShell 7 on Windows platforms. The commands rely on the CIM cmdlets and traditional PowerShell remoting.
 
 Install the module from the PowerShell Gallery.
 
@@ -26,7 +26,7 @@ The module contains the following commands:
 | [Show-DriveView](docs/Show-DriveView.md) | *sdv* | Display a summary view of all drives. |
 | [Show-FolderUsage](docs/Show-FolderUsage.md) | *sfu* | Show folder usage by file extension |
 
-### Get-RecycleBinSize
+### [Get-RecycleBinSize](docs/Get-RecycleBinSize.md)
 
 This command will return the size of the recycle bin for each logical drive.
 
@@ -92,7 +92,7 @@ C:    0
 
 This example is using the `rbsz` alias for `Get-RecycleBinSize`.
 
-### New-HtmlDriveReport
+### [New-HtmlDriveReport](docs/New-HtmlDriveReport.md)
 
 This command will create an HTML report of disk usage for one or more computers. Drive usage will be represented as a bar graph. You can customize the report title and heading.
 
@@ -102,7 +102,7 @@ New-HtmlDriveReport -ComputerName DOM1,DOM2,SRV1,SRV2,WIN10,WIN11 -ReportTitle "
 
 ![Company Disk Usage Report](images/html-disk-report.png)
 
-### Show-DriveUsage
+### [Show-DriveUsage](docs/Show-DriveUsage.md)
 
 This command uses the PowerShell console to display a colorized graph of disk usage.
 The graph will be color coded depending on the amount of free disk space.
@@ -115,7 +115,7 @@ The default behavior is to display the graph for all local, fixed drives. You ca
 
 The drive usage thresholds are hard-coded into the command. They could be surfaced as parameters.
 
-### Show-DriveView
+### [Show-DriveView](docs/Show-DriveView.md)
 
 A related command in `Show-DriveView`. This command will display a summary view of all local, fixed drives. The default behavior is to send the output to `Out-GridView`.
 
@@ -133,7 +133,7 @@ Show-DriveView -Title "Company Drive View" -ComputerName SRV1,SRV2,Dom1,Dom2 -Co
 
 ![Show-DriveView ConsoleGridView](images/console-driveview.png)
 
-### Show-FolderUsage
+### [Show-FolderUsage](docs/Show-FolderUsage.md)
 
 This command will display folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the `-Threshold` parameter.
 
