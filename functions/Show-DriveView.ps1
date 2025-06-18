@@ -31,7 +31,6 @@ Function Show-DriveView {
     DynamicParam {
         # This will imply PowerShell 7
         If (Get-Module Microsoft.PowerShell.ConsoleGuiTools -ListAvailable) {
-
             $paramDictionary = New-Object -Type System.Management.Automation.RuntimeDefinedParameterDictionary
 
             # Defining parameter attributes

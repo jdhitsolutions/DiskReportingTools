@@ -16,15 +16,14 @@ Show folder usage by file extension.
 ### __AllParameterSets (Default)
 
 ```yaml
-Show-FolderUsage [-Path] <String> [[-ComputerName] <String[]>] [-Credential <PSCredential>]
- [-Threshold <Int32>] [<CommonParameters>]
+Show-FolderUsage [-Path] <String> [-Threshold <Int32>] [-Raw] [<CommonParameters>]
 ```
 
-### raw
+### Windows
 
 ```yaml
-Show-FolderUsage [-Path] <String> [[-ComputerName] <String[]>] [-Credential <PSCredential>]
- [-Threshold <Int32>] [-Raw] [<CommonParameters>]
+Show-FolderUsage [-Path] <String> [-Threshold <Int32>] [-Raw] [[-ComputerName] <String[]>]
+ [-Credential <PSCredential>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,10 +39,10 @@ PS C:\> Show-FolderUsage c:\temp
 
 [PROSPERO] C:\Temp
 
-.mp3 [████████                                             ] 17.54%
-.zip [███████████████████                                  ] 38.33%
-.m4a [████████                                             ] 18.93%
-.csv [████                                                 ] 8.41%
+.csv [|||||||||                                    ] 8.00%
+.m4a [||||||||||||||                               ] 17.99%
+.mp3 [||||||||||||                                 ] 16.67%
+.zip [||||||||||||||||||||||||||||                 ] 37.29%
 ```
 
 The output will be color formatted and styled.
@@ -77,27 +76,28 @@ Get the raw data so that you can do you own formatting or visualization.
 Specify the name of a remote computer.
 You must have admin rights.
 The default is the localhost.
+This is a dynamic parameter that is only available on Windows systems.
 
 ```yaml
 Type: String[]
-Parameter Sets: (All)
+Parameter Sets: Windows
 Aliases: CN
 
 Required: False
 Position: 1
 Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
 ### -Credential
 
-Specify an alternate credential for the remote computer.
+Specify an alternate credential for the remote computer. This is a dynamic parameter that is only available on Windows systems.
 
 ```yaml
 Type: PSCredential
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: Windows
+Aliases: RunAs
 
 Required: False
 Position: Named
@@ -129,7 +129,7 @@ Display raw output without formatting.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: raw
+Parameter Sets: (All)
 Aliases:
 
 Required: False

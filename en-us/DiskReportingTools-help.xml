@@ -803,7 +803,7 @@ Free%        : 88.02</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="CN">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="1" aliases="CN">
           <maml:name>ComputerName</maml:name>
           <maml:description>
             <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost.</maml:para>
@@ -815,7 +815,7 @@ Free%        : 88.02</dev:code>
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RunAs">
           <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>Specify an alternate credential for the remote computer.</maml:para>
@@ -853,7 +853,7 @@ Free%        : 88.02</dev:code>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="CN">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="1" aliases="CN">
         <maml:name>ComputerName</maml:name>
         <maml:description>
           <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost.</maml:para>
@@ -865,7 +865,7 @@ Free%        : 88.02</dev:code>
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RunAs">
         <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>Specify an alternate credential for the remote computer.</maml:para>
@@ -978,10 +978,10 @@ Free%        : 88.02</dev:code>
 
 [PROSPERO] C:\Temp
 
-.mp3 [████████                                             ] 17.54%
-.zip [███████████████████                                  ] 38.33%
-.m4a [████████                                             ] 18.93%
-.csv [████                                                 ] 8.41%</dev:code>
+.csv [|||||||||                                    ] 8.00%
+.m4a [||||||||||||||                               ] 17.99%
+.mp3 [||||||||||||                                 ] 16.67%
+.zip [||||||||||||||||||||||||||||                 ] 37.29%</dev:code>
         <dev:remarks>
           <maml:para>The output will be color formatted and styled.</maml:para>
         </dev:remarks>

@@ -1,6 +1,224 @@
 Function Show-FolderUsage {
     [cmdletbinding(DefaultParameterSetName = '__AllParameterSets')]
     [alias('sfu')]
+    Param(
+        [Parameter(
+            Position = 0,
+            Mandatory = $true,
+            ValueFromPipeline,
+            ValueFromPipelineByPropertyName,
+            HelpMessage = 'Specify the path to the folder to analyze. Use a full file system path')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Path,
+
+        [Parameter(
+            ValueFromPipelineByPropertyName,
+            HelpMessage = 'Specify the minimum percentage to display. The default is 5%'
+        )]
+        [ValidateRange(1, 99)]
+        [int]$Threshold = 5,
+
+        [Parameter(HelpMessage = 'Display raw output without formatting.')]
+        [switch]$Raw
+    )
+    DynamicParam {
+        If ($isWindows -OR ($PSEdition -eq 'Desktop')) {
+            $paramDictionary = New-Object -Type System.Management.Automation.RuntimeDefinedParameterDictionary
+
+            #Computername
+            $attributeCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $attributes = New-Object System.Management.Automation.ParameterAttribute
+            $attributes.ParameterSetName = 'Windows'
+            $attributes.ValueFromPipelineByPropertyName = $True
+            $attributes.ValueFromPipeline = $True
+            $attributes.HelpMessage = 'Specify the name of a remote computer. You must have admin rights. The default is the localhost.'
+
+            $v = New-Object System.Management.Automation.ValidateNotNullOrEmptyAttribute
+            $AttributeCollection.Add($v)
+            $attributeCollection.Add($attributes)
+
+            $dynAlias = New-Object System.Management.Automation.AliasAttribute -ArgumentList 'CN'
+            $attributeCollection.Add($dynAlias)
+
+            $dynParam1 = New-Object -Type System.Management.Automation.RuntimeDefinedParameter('ComputerName', [String[]], $attributeCollection)
+            $dynParam1.Value = '$env:Computername'
+            $paramDictionary.Add('ComputerName', $dynParam1)
+
+            #credential
+            $attributeCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $attributes = New-Object System.Management.Automation.ParameterAttribute
+            $attributes.ParameterSetName = 'Windows'
+            $attributes.ValueFromPipelineByPropertyName = $True
+            $attributes.HelpMessage = 'specify an alternate credential'
+
+            $v = New-Object System.Management.Automation.ValidateNotNullOrEmptyAttribute
+            $AttributeCollection.Add($v)
+            $attributeCollection.Add($attributes)
+
+            $dynAlias = New-Object System.Management.Automation.AliasAttribute -ArgumentList 'RunAs'
+            $attributeCollection.Add($dynAlias)
+
+            $dynParam1 = New-Object -Type System.Management.Automation.RuntimeDefinedParameter('Credential', [PSCredential], $attributeCollection)
+            $paramDictionary.Add('Credential', $dynParam1)
+
+            return $paramDictionary
+        } # end if
+    } #end DynamicParam
+
+    Begin {
+        $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
+        $PSDefaultParameterValues['_verbose:block'] = 'Begin'
+        _verbose -message $strings.Starting
+        if ($MyInvocation.CommandOrigin -eq 'Runspace') {
+            $platformOS = If ($PSVersionTable.OS) {
+                $PSVersionTable.OS
+            }
+            else {
+                'Windows'
+            }
+
+            #Hide this metadata when the command is called from another command
+            _verbose -message ($strings.PSVersion -f $PSVersionTable.PSVersion)
+            _verbose -message ($strings.UsingHost -f $host.Name)
+            _verbose -message ($strings.UsingOS -f $platformOS)
+            _verbose -message ($strings.UsingModule -f $DiskReportingModule)
+        }
+
+        $sym = ' '
+
+        #define the scriptblock to run remotely
+        $sb = {
+            param($path)
+            Try {
+                #validate the path
+                $test = Get-Item -Path $path -ErrorAction Stop
+                $files = Get-ChildItem -Path $path -File -Recurse -ErrorAction Stop
+            }
+            Catch {
+                $_
+            }
+            If ($files) {
+                $files | Group-Object -Property extension |
+                Select-Object -Property Name, Count,
+                @{Name = 'Size'; Expression = { ($_.Group | Measure-Object -Property length -Sum).sum } },
+                @{Name = 'Computername'; Expression = { [System.Environment]::MachineName } }
+            }
+        }
+
+        $icmSplat = @{
+            ScriptBlock  = $sb
+            ArgumentList = ''
+            ErrorAction  = 'Stop'
+        }
+
+    } #begin
+    Process {
+        $PSDefaultParameterValues['_verbose:block'] = 'Process'
+        $icmSplat['ArgumentList'] = $Path
+        _verbose ($strings.DetectedParameterSet -f $PSCmdlet.ParameterSetName)
+        Write-Information $PSBoundParameters -Tags runtime
+        if ($PSCmdlet.ParameterSetName -eq 'Windows') {
+            $Credential = $PSBoundParameters['Credential']
+            If ($Credential) {
+                _verbose ($strings.RunAs -f $Credential.UserName)
+                $icmSplat['Credential'] = $Credential
+            }
+            $ComputerName = $PSBoundParameters['ComputerName']
+        } #Windows
+        else {
+            $Computername = [System.Environment]::MachineName
+        }
+        #Process computers individually
+        foreach ($Computer in $ComputerName) {
+            _verbose ($strings.FolderUsage -f $Path, ($Computer.ToUpper()))
+            if ($computer -ne [System.Environment]::MachineName) {
+                #don't include the local computer name for Invoke-Command
+                $icmSplat['ComputerName'] = $Computer
+                $icmSplat['HideComputerName'] = $True
+            }
+            else {
+                #make sure Computername has been removed
+                $icmSplat.Remove('ComputerName')
+                $icmSplat.Remove('HideComputerName')
+            }
+            Write-Information $icmSplat -Tags runtime
+            Try {
+                $data = Invoke-Command @icmSplat
+            }
+            Catch {
+                Write-Information $_ -Tags error
+                $_
+            }
+
+            If ($data) {
+                #get the total sum of all files
+                $totalSum = ($data | Measure-Object -Property size -Sum).Sum
+                Write-Information "Total size: $totalSum bytes" -Tags data
+                $data | Add-Member -MemberType NoteProperty -Name 'Total' -Value $totalSum -Force
+                $data | Add-Member -MemberType ScriptProperty -Name 'Pct' -Value { ($this.Size / $this.total) * 100 } -Force
+                Write-Information $data -Tags data
+
+                if ($raw) {
+                    $data | Select-Object -Property *,
+                    @{Name = 'Path'; Expression = { _toTitleCase $Path } }-ExcludeProperty RunspaceID
+                }
+                else {
+                    #format the results
+                    $header = "[$cnStyle{1}$reset] $pathStyle{0}$reset" -f (_toTitleCase $Path), $data[0].Computername
+                    #this will be the output
+                    $out = @"
+
+$header
+
+
+"@
+                    #filter out extensions with less than the threshold percentage
+                    $filtered = $data.Where({ $_.Pct -ge $Threshold })
+                    #get longest extension name
+                    $maxLength = ($filtered.name) | Select-Object -ExpandProperty length | Sort-Object | Select-Object -Last 1
+
+                    foreach ($item in $filtered) {
+                        $pct = $item.Pct
+                        [double]$scaled = $pct / 2
+                        [int]$used = 50 - $scaled
+                        $displayPct = [math]::Round($scaled * 2, 2)
+                        $bar = ($sym * $scaled)
+                        $remain = 50 - $scaled
+                        if ($pct -gt 50) {
+                            $bgColor = $redBG
+                            $fgColor = $red
+                        }
+                        elseif ($pct -gt 20) {
+                            $bgColor = $yellowBG
+                            $fgColor = $yellow
+                        }
+                        else {
+                            $bgColor = $greenBG
+                            $fgColor = $green
+                        }
+                        $out += "{0} [{1}{2}{3}{4}] {5}{6:P2}{3}`n" -f ($item.Name).PadRight($maxLength), $bgColor, $bar, $Reset, (' ' * $remain), $fgColor, ($pct / 100)
+
+                    } #foreach item
+
+                    $out
+                }
+                Clear-Variable -Name data
+            } #if data
+
+
+        } #foreach computer
+    } #process
+    End {
+        $PSDefaultParameterValues['_verbose:block'] = 'End'
+        $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
+        _verbose $strings.Ending
+    } #end
+}
+
+<#
+Function Show-FolderUsage {
+    [cmdletbinding(DefaultParameterSetName = '__AllParameterSets')]
+    [alias('sfu')]
     [OutputType('PSObject',ParameterSetName='raw')]
     [OutputType('System.String',ParameterSetName='__AllParameterSets')]
     Param(
@@ -20,7 +238,7 @@ Function Show-FolderUsage {
         )]
         [ValidateNotNullOrEmpty()]
         [Alias("CN")]
-        [string[]]$ComputerName = $env:COMPUTERNAME,
+        [string[]]$ComputerName = [System.Environment]::MachineName,
 
         [Parameter(
             ValueFromPipelineByPropertyName,
@@ -58,7 +276,7 @@ Function Show-FolderUsage {
             param($path)
             Try {
                 #validate the path
-                $test = Get-Item -Path $path -ErrorAction Stop | Out-Null
+                $test = Get-Item -Path $path -ErrorAction Stop
                 $files = Get-ChildItem -Path $path -File -Recurse -ErrorAction Stop
             }
             Catch {
@@ -163,3 +381,4 @@ $header
         _verbose $strings.Ending
     } #end
 }
+#>

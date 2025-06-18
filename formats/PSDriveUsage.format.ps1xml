@@ -16,7 +16,7 @@
                              <NewLine/>
                              <ExpressionBinding>
                                 <ScriptBlock>
-                                    $_.Drives | foreach-object { "  $_"} | Out-String
+                                    $_.Drives | ForEach-Object { "  $_"} | Out-String
                                 </ScriptBlock>
                             </ExpressionBinding>
                           </CustomItem>
