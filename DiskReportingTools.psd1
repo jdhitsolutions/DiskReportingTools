@@ -35,7 +35,7 @@
             ProjectUri               = 'https://github.com/jdhitsolutions/DiskReportingTools'
             #IconUri = ''
             ReleaseNotes             = @"
-## 0.12.0
+## [0.12.0] - 2025-06-19
 
 ### Added
 
