@@ -4,7 +4,7 @@
 
 @{
     RootModule           = 'DiskReportingTools.psm1'
-    ModuleVersion        = '0.11.0'
+    ModuleVersion        = '0.12.0'
     CompatiblePSEditions = @('Core', 'Desktop')
     GUID                 = '20e6a37d-d899-4594-96fe-39ab7f608371'
     Author               = 'Jeff Hicks'
@@ -17,13 +17,15 @@
         'Show-DriveView',
         'New-HtmlDriveReport',
         'Get-RecycleBinSize',
-        'Show-FolderUsage'
+        'Show-FolderUsage',
+        'Get-DiskReportingTools'
     )
     AliasesToExport = 'sdu', 'rbsz', 'sfu','sdv'
     TypesToProcess = @()
     FormatsToProcess = @(
         'formats\PSDriveUsage.format.ps1xml',
-        'formats\RecycleBinInfo.format.ps1xml'
+        'formats\RecycleBinInfo.format.ps1xml',
+        'formats\modulecommand.format.ps1xml'
     )
     VariablesToExport = 'DiskReportingANSI', 'DiskReportingModule'
     PrivateData = @{
@@ -33,22 +35,28 @@
             ProjectUri               = 'https://github.com/jdhitsolutions/DiskReportingTools'
             #IconUri = ''
             ReleaseNotes             = @"
-## 0.11.0
+## 0.12.0
 
 ### Added
 
-- Added alias `sdv` for `Show-DriveView`.
-- Added command `Show-FolderUsage` with an alias of `sfu`.`
+- Added command `Get-DiskReportingTools` to display a module command summary.
 
 ### Changed
 
-- Added `Raw` parameter to all commands that display visualized output to emit the raw, unformatted data. This is so the user can create their own formatting or visualizations.
-- Added the `CN` alias to the `Computername` parameter on all commands.
-- Moved ANSI definitions to the root module.
-- Help updates.
-- Modified `Credential` parameter on functions to accept pipeline input by property name.
-- Added missing online help links.
-- Updated `README.md`.
+- Changed `Threshold` parameter in `Show-FolderUsage` from an `int` to a `double` so users can use a value like 2.5.
+- Adjusted Computername title in formatted output for `Show-DriveUsage`.
+- Updated `Show-FolderUsage` to show the number of files in the graphical output.
+- Added sorting parameters to `Show-FolderUsage`.
+- Revised `Show-FolderUsage` to support a `Threshold` value of 0 which should show all extensions.
+- Revised `Show-FolderUsage` to convert paths to complete file system paths.
+- Refactored `Show-FolderUsage` and `Show-DriveUsage` to support non-Windows platforms in PowerShell 7. These commands use dynamic parameters for Windows-only parameters.
+- Updated casing on the `en-US` folder to correct localization problems on non-Windows platforms.
+- Added more information stream items to module commands.
+
+### Fixed
+
+- Fixed localization error with Invariant cultures.
+- Fixed error in exporting module functions.
 "@
             RequireLicenseAcceptance = $false
         } # End of PSData hashtable

@@ -1,3 +1,6 @@
+if ($IsMacOS -OR $isLinux) {
+     return
+}
 Function Get-RecycleBinSize {
     [cmdletbinding()]
     [OutputType('RecycleBinInfo')]
@@ -22,9 +25,14 @@ Function Get-RecycleBinSize {
     )
 
     Begin {
+        if ($IsMacOS -OR $isLinux) {
+          Write-Warning $strings.Unsupported
+          break
+        }
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
         $PSDefaultParameterValues['_verbose:block'] = 'Begin'
         _verbose -message $strings.Starting
+        Write-Information $MyInvocation -Tags runtime
         if ($MyInvocation.CommandOrigin -eq 'Runspace') {
             #Hide this metadata when the command is called from another command
             _verbose -message ($strings.PSVersion -f $PSVersionTable.PSVersion)
@@ -87,6 +95,7 @@ Function Get-RecycleBinSize {
         $PSDefaultParameterValues['_verbose:block'] = 'End'
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
         _verbose $strings.Ending
+        Write-Information $strings.Ending -Tags runtime
     } #end
 
 } #close Get-RecycleBinSize

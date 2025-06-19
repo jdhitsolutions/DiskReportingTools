@@ -16,14 +16,13 @@ Display a colorized graph of disk usage
 ### __AllParameterSets (Default)
 
 ```yaml
-Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>]
- [<CommonParameters>]
+Show-DriveUsage [-Raw] [<CommonParameters>]
 ```
 
-### raw
+### Windows
 
 ```yaml
-Show-DriveUsage [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>] [-Raw]
+Show-DriveUsage [-Raw] [[-Drive] <String>] [-ComputerName <String[]>] [-Credential <PSCredential>]
  [<CommonParameters>]
 ```
 
@@ -43,10 +42,11 @@ This command writes an object to the pipeline, but the properties are ANSI forma
 PS C:\> Show-DriveUsage
 
 WIN10-ENT-01
-C: \[|||||                                             \] 9.14%
-D: \[|||||                                             \] 9.12%
-E: \[|||||||||||||||||||||||||||||||||||               \] 70.71%
-F: \[|||||||||||||||||||||||||                         \] 49.77%
+
+C: [|||||                                             ] 9.14%
+D: [|||||                                             ] 9.12%
+E: [|||||||||||||||||||||||||||||||||||               ] 70.71%
+F: [|||||||||||||||||||||||||                         ] 49.77%
 ```
 
 The output would be colored blocks for drives C: and D:, yellow for F: and green for E:
@@ -57,7 +57,8 @@ The output would be colored blocks for drives C: and D:, yellow for F: and green
 PS C:\> Show-DriveUsage -computer chi-dc04 -drive c:
 
 CHI-DC04
-C: \[|||||||||||||||||||||||||                         \] 49.63%
+
+C: [|||||||||||||||||||||||||                         ] 49.63%
 ```
 
 ### Example 3
@@ -82,16 +83,29 @@ Compressed     : False
 
 Return raw data so you can create your own formatting or visualization.
 
+### Example 4
+
+```powershell
+PS /home/jeff> Show-DriveUsage
+
+BAMBAM
+
+  /dev/sdd [||||||||||||||||||||||||||||||||||||||||||||    ] 94%
+```
+
+An example of output on a Linux system.
+
 ## PARAMETERS
 
 ### -Drive
 
 The name of the drive to check, including the colon.
 See examples.
+This parameter is only supported on Windows.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Windows
 Aliases:
 
 Required: False
@@ -105,10 +119,11 @@ Accept wildcard characters: False
 
 The name of the computer to query.
 This command has aliases of: CN
+This parameter is only supported on Windows.
 
 ```yaml
 Type: String[]
-Parameter Sets: (All)
+Parameter Sets: Windows
 Aliases: CN
 
 Required: False
@@ -120,12 +135,12 @@ Accept wildcard characters: False
 
 ### -Credential
 
-Specify an alternate credential.
+Specify an alternate credential. This parameter is only supported on Windows.
 
 ```yaml
 Type: PSCredential
-Parameter Sets: (All)
-Aliases:
+Parameter Sets: Windows
+Aliases: RunAs
 
 Required: False
 Position: Named
@@ -140,7 +155,7 @@ Display raw output without formatting.
 
 ```yaml
 Type: SwitchParameter
-Parameter Sets: raw
+Parameter Sets: (All)
 Aliases:
 
 Required: False

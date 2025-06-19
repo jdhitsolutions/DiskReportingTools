@@ -3,27 +3,16 @@
 # write-host "Importing with culture $(Get-Culture)" -ForeGroundColor yellow
 $culture = If ($PSUICulture) {
     $PSUICulture.Name
-} else {
+}
+else {
     'en-US'
 }
 
 $baseDir = Join-Path -Path $PSScriptRoot -ChildPath $culture
-Write-Host "Imported strings from $baseDir"
-write-host "Detected culture: $culture"
+#Write-Host "Imported strings from $baseDir"
+#write-host "Detected culture: $culture"
 #need to account for InvariantCulture on non-Windows systems
-Import-LocalizedData -BindingVariable strings -BaseDirectory $baseDir -UICulture $culture -FileName DiskReportingTools.psd1
-
-<#
-if ((Get-Culture).Name -match '\w+') {
-    #write-host "Using culture $(Get-Culture)" -ForegroundColor yellow
-    Import-LocalizedData -BindingVariable strings
-}
-else {
-    #force using En-US if no culture found, which might happen on non-Windows systems.
-    #write-host "Loading $PSScriptRoot/en-us/PSWorkItem.psd1" -ForegroundColor yellow
-    Import-LocalizedData -BindingVariable strings -FileName DiskReportingTools.psd1 -BaseDirectory $PSScriptRoot/en-us
-}
-#>
+Import-LocalizedData -BindingVariable strings -BaseDirectory $baseDir -UICulture (Get-Culture).Name -FileName DiskReportingTools.psd1
 
 #endregion
 
@@ -59,8 +48,11 @@ $mod = Import-PowerShellDataFile -Path $PSScriptRoot\DiskReportingTools.psd1 -Er
 
 New-Variable -Name DiskReportingModule -Value $mod.moduleVersion -Description 'The DiskReportingTools module version used in verbose messaging.'
 
-Export-ModuleMember -Variable DiskReportingANSI, DiskReportingModule -Alias sdu, rbsz, sdv, sfu -Function 'Show-DriveUsage',
-'Show-DriveView',
-'New-HtmlDriveReport',
-'Get-RecycleBinSize',
-'Show-FolderUsage'
+$paramHash = @{
+    Variable = 'DiskReportingANSI', 'DiskReportingModule'
+    Alias    = 'sdu', 'rbsz', 'sdv', 'sfu'
+    Function = 'Show-DriveUsage', 'Show-DriveView', 'New-HtmlDriveReport',
+    'Get-RecycleBinSize', 'Show-FolderUsage','Get-DiskReportingTools'
+}
+
+Export-ModuleMember @paramHash

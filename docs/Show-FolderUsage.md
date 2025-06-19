@@ -16,14 +16,15 @@ Show folder usage by file extension.
 ### __AllParameterSets (Default)
 
 ```yaml
-Show-FolderUsage [-Path] <String> [-Threshold <Int32>] [-Raw] [<CommonParameters>]
+Show-FolderUsage [-Path] <String> [-Threshold <Double>] [-Sort <String>] [-Descending] [-Raw]
+ [<CommonParameters>]
 ```
 
 ### Windows
 
 ```yaml
-Show-FolderUsage [-Path] <String> [-Threshold <Int32>] [-Raw] [[-ComputerName] <String[]>]
- [-Credential <PSCredential>] [<CommonParameters>]
+Show-FolderUsage [-Path] <String> [-Threshold <Double>] [-Sort <String>] [-Descending] [-Raw]
+ [[-ComputerName] <String[]>] [-Credential <PSCredential>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,13 +40,13 @@ PS C:\> Show-FolderUsage c:\temp
 
 [PROSPERO] C:\Temp
 
-.csv [|||||||||                                    ] 8.00%
-.m4a [||||||||||||||                               ] 17.99%
-.mp3 [||||||||||||                                 ] 16.67%
-.zip [||||||||||||||||||||||||||||                 ] 37.29%
+.mp3 [ 1||||||||||||                                      ] 17.54%
+.zip [ 8||||||||||||||||||||                              ] 38.33%
+.m4a [ 1|||||||||||||                                     ] 18.93%
+.csv [ 4||||                                              ] 8.41%
 ```
 
-The output will be color formatted and styled.
+The output will be color formatted and styled. The number in the graph is the number of files for each extension.
 
 ### Example 2
 
@@ -69,42 +70,23 @@ Name       Count     Size     Total   Pct Path       ComputerName
 
 Get the raw data so that you can do you own formatting or visualization.
 
+### Example 3
+
+```powershell
+PS /home/jeff> Show-FolderUsage . -Sort Size -Descending
+
+[BamBam] /Home/Jeff
+
+.mp3 [ 8  ||||||||||||||||||||||                            ] 39.80 %
+.zip [ 7  ||||||||||||||||                                  ] 19.33 %
+.jpg [ 10 ||||||||||                                        ] 15.03 %
+.m4a [ 1  |||||||                                           ] 12.22 %
+.pdf [ 7  ||||                                              ] 5.87 %
+```
+
+This command is supported on non-Windows platforms, although it can only query the local computer. In this example, the output sorted on the Size in descending order.
+
 ## PARAMETERS
-
-### -ComputerName
-
-Specify the name of a remote computer.
-You must have admin rights.
-The default is the localhost.
-This is a dynamic parameter that is only available on Windows systems.
-
-```yaml
-Type: String[]
-Parameter Sets: Windows
-Aliases: CN
-
-Required: False
-Position: 1
-Default value: None
-Accept pipeline input: True (ByPropertyName, ByValue)
-Accept wildcard characters: False
-```
-
-### -Credential
-
-Specify an alternate credential for the remote computer. This is a dynamic parameter that is only available on Windows systems.
-
-```yaml
-Type: PSCredential
-Parameter Sets: Windows
-Aliases: RunAs
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
 
 ### -Path
 
@@ -120,6 +102,41 @@ Required: True
 Position: 0
 Default value: None
 Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -ComputerName
+
+Specify the name of a remote computer.
+You must have admin rights.
+The default is the localhost.
+This is a dynamic parameter and only available on Windows platforms.
+
+```yaml
+Type: String[]
+Parameter Sets: Windows
+Aliases: CN
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: True (ByPropertyName, ByValue)
+Accept wildcard characters: False
+```
+
+### -Credential
+
+Specify an alternate credential for the remote computer. This is a dynamic parameter and only available on Windows platforms.
+
+```yaml
+Type: PSCredential
+Parameter Sets: Windows
+Aliases: RunAs
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -145,7 +162,7 @@ Specify the minimum percentage to display.
 The default is 5%
 
 ```yaml
-Type: Int32
+Type: Double
 Parameter Sets: (All)
 Aliases:
 
@@ -153,6 +170,38 @@ Required: False
 Position: Named
 Default value: 5
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -Sort
+
+Sort the graphical output by size or extension name in ascending order.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: Size
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Descending
+
+Sort the graphical output in descending order.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

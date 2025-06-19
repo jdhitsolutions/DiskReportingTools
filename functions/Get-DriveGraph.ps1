@@ -73,7 +73,7 @@ Function Show-DriveUsage {
             break
         }
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
-        Write-Information $MyInvocation
+        Write-Information $MyInvocation -Tags runtime
         $PSDefaultParameterValues['_verbose:block'] = 'Begin'
         _verbose -message $strings.Starting
         $platformOS = If ($PSVersionTable.OS) {
@@ -169,6 +169,7 @@ Function Show-DriveUsage {
 
                     #the comparison value is a relative percentage
                     #based on 0 to 50
+                    #colors are defined as module-scoped variables
                     if ($pct -ge 30) {
                         $bgColor = $greenBG
                         $fgColor = $green
@@ -186,7 +187,7 @@ Function Show-DriveUsage {
                         $di = $disk | Select-Object -Property VolumeName, DeviceID, Size, FreeSpace, PercentageFree, Compressed
                     }
                     else {
-                        $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset, (' ' * $used), $fgColor, $DisplayPct
+                        $di = '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $disk.DeviceID, $bgColor, ($sym * $pct), $Reset, (' '*$used), $fgColor, $DisplayPct
                     }
                     $diskInfo += $di
 
@@ -200,7 +201,7 @@ Function Show-DriveUsage {
                     $cs | Remove-CimSession -ErrorAction SilentlyContinue
                 }
             }  #foreach computer
-        }
+        } #Windows
         else {
             #Linux code using df
             'df', 'tr' | ForEach-Object {
@@ -221,6 +222,7 @@ Function Show-DriveUsage {
             Select-Object -Property 'Path','TotalSize','Used','Free',
             @{Name = 'UsedPercent'; Expression = { ($_.UsedPercent -replace '%', '') -as [int]}}, Mount
 
+            Write-Information $drives -Tags data,linux
             if ($Raw) {
                 [PSCustomObject]@{
                     PSTypeName   = 'PSDriveUsageRaw'
@@ -233,11 +235,11 @@ Function Show-DriveUsage {
                     PSTypeName   = 'PSDriveUsage'
                     ComputerName = [System.Environment]::MachineName.ToUpper()
                 }
+                $di = @()
                 foreach ($item in $drives) {
                     [double]$pct = ($item.Free / $item.TotalSize) * 50
-                    #show the actual percentage
-                    $displayPct = $item.UsedPercent
-                    #[math]::Round($pct * 2, 2)
+
+                    $displayPct = 100-$item.UsedPercent
                     [int]$used = 50 - $pct
                     #the comparison value is a relative percentage
                     #based on 0 to 50
@@ -253,21 +255,20 @@ Function Show-DriveUsage {
                         $bgColor = $redBG
                         $fgColor = $red
                     }
-                    $di = @()
-                    foreach ($d in $drives) {
-                        $di += '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $d.Path, $bgColor, ($sym * $pct), $Reset, ('.' *$used), $fgColor, $DisplayPct
-                    }
+
+                    $di += '{0} [{1}{2}{3}{4}] {5}{6}%{3}' -f $item.Path, $bgColor, ($sym * $pct), $Reset, (' ' *$used), $fgColor, $DisplayPct
+
                 }
                 $h.Add('Drives', $di)
                 New-Object PSObject -Property $h
             }
         }
-
     } #process
     End {
         $PSDefaultParameterValues['_verbose:block'] = 'End'
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
         _verbose $strings.Ending
+        Write-Information $strings.Ending -Tags runtime
     } #end
 }
 

@@ -15,8 +15,14 @@ Function Show-FolderUsage {
             ValueFromPipelineByPropertyName,
             HelpMessage = 'Specify the minimum percentage to display. The default is 5%'
         )]
-        [ValidateRange(1, 99)]
-        [int]$Threshold = 5,
+        [ValidateRange(0, 99)]
+        [double]$Threshold = 5,
+
+        [Parameter(HelpMessage = "Sort the graphical output by size or extension in ascending order")]
+        [ValidateSet('Size', 'Name')]
+        [string]$Sort = "Name",
+
+        [switch]$Descending,
 
         [Parameter(HelpMessage = 'Display raw output without formatting.')]
         [switch]$Raw
@@ -69,6 +75,7 @@ Function Show-FolderUsage {
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
         $PSDefaultParameterValues['_verbose:block'] = 'Begin'
         _verbose -message $strings.Starting
+        Write-Information $MyInvocation -Tags runtime
         if ($MyInvocation.CommandOrigin -eq 'Runspace') {
             $platformOS = If ($PSVersionTable.OS) {
                 $PSVersionTable.OS
@@ -114,6 +121,7 @@ Function Show-FolderUsage {
     } #begin
     Process {
         $PSDefaultParameterValues['_verbose:block'] = 'Process'
+        $Path = Convert-Path $Path
         $icmSplat['ArgumentList'] = $Path
         _verbose ($strings.DetectedParameterSet -f $PSCmdlet.ParameterSetName)
         Write-Information $PSBoundParameters -Tags runtime
@@ -173,9 +181,12 @@ $header
 
 "@
                     #filter out extensions with less than the threshold percentage
-                    $filtered = $data.Where({ $_.Pct -ge $Threshold })
+                    $filtered = $data.Where({ $_.Pct -ge $Threshold }) | Sort-Object -Property $Sort -Descending:$Descending
                     #get longest extension name
-                    $maxLength = ($filtered.name) | Select-Object -ExpandProperty length | Sort-Object | Select-Object -Last 1
+                    $maxLength = ($filtered.name) | Select-Object -ExpandProperty length |
+                    Sort-Object | Select-Object -Last 1
+                    #get the longest file count
+                    [string]$maxCount = ($filtered | Sort-Object Count | Select -Last 1 -ExpandProperty Count)
 
                     foreach ($item in $filtered) {
                         $pct = $item.Pct
@@ -183,7 +194,9 @@ $header
                         [int]$used = 50 - $scaled
                         $displayPct = [math]::Round($scaled * 2, 2)
                         $bar = ($sym * $scaled)
+
                         $remain = 50 - $scaled
+                        #colors are defined as module-scoped variables
                         if ($pct -gt 50) {
                             $bgColor = $redBG
                             $fgColor = $red
@@ -196,7 +209,11 @@ $header
                             $bgColor = $greenBG
                             $fgColor = $green
                         }
-                        $out += "{0} [{1}{2}{3}{4}] {5}{6:P2}{3}`n" -f ($item.Name).PadRight($maxLength), $bgColor, $bar, $Reset, (' ' * $remain), $fgColor, ($pct / 100)
+
+                        #19 June 2025 Include file count in the output
+                        #format as Black
+                        $fileCount = "$([char]27)[30m{0}" -f ([string]$item.count).PadRight($maxCount.Length)
+                        $out += "{0} [{1} {7}{2}{3}{4}] {5}{6:P2}{3}`n" -f ($item.Name).PadRight($maxLength), $bgColor, $bar, $Reset, (' ' * $remain), $fgColor, ($pct / 100),$fileCount
 
                     } #foreach item
 
@@ -204,14 +221,13 @@ $header
                 }
                 Clear-Variable -Name data
             } #if data
-
-
         } #foreach computer
     } #process
     End {
         $PSDefaultParameterValues['_verbose:block'] = 'End'
         $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
         _verbose $strings.Ending
+        Write-Information $strings.Ending -Tags runtime
     } #end
 }
 

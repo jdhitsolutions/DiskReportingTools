@@ -1,3 +1,6 @@
+if ($IsMacOS -OR $isLinux) {
+     return
+}
 Function New-HtmlDriveReport {
   [cmdletbinding()]
   [OutputType('None','System.IO.FileInfo')]
@@ -36,9 +39,14 @@ Function New-HtmlDriveReport {
   )
 
   Begin {
+      if ($IsMacOS -OR $isLinux) {
+          Write-Warning $strings.Unsupported
+          break
+      }
     $PSDefaultParameterValues['_verbose:Command'] = $MyInvocation.MyCommand
     $PSDefaultParameterValues['_verbose:block'] = 'Begin'
     _verbose -message $strings.Starting
+    Write-Information $MyInvocation -Tags runtime
     if ($MyInvocation.CommandOrigin -eq 'Runspace') {
       #Hide this metadata when the command is called from another command
       _verbose -message ($strings.PSVersion -f $PSVersionTable.PSVersion)
@@ -94,6 +102,7 @@ Function New-HtmlDriveReport {
       }
 
       If ($Data) {
+        Write-Information $data -Tags data
         #group data by ComputerName
         $groups = $Data | Group-Object -Property SystemName
 
@@ -101,6 +110,7 @@ Function New-HtmlDriveReport {
         #iterate through each group object
 
         ForEach ($computer in $groups) {
+          Write-Information $computer -Tags data
           $fragments += "<H3>$($computer.Name)</H3>"
 
           #define a collection of drives from the group object
@@ -152,11 +162,13 @@ Function New-HtmlDriveReport {
     #write the result to a file
     _verbose ($strings.HTMLFile -f $Path)
     ConvertTo-Html -Head $head -Body $fragments | Out-File -FilePath $Path
+    Write-Information (Get-Item -Path $Path) -Tags data
     If ($Passthru) {
       #return the file path
       Get-Item -path $Path
     }
     _verbose $strings.Ending
+    Write-Information $strings.Ending -Tags runtime
   } #end
 
 }
