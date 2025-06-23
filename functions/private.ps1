@@ -38,6 +38,12 @@ Function _toTitleCase {
         [string]$Text
     )
 
-    (Get-Culture).TextInfo.ToTitleCase($Text)
+    #ignore if running Linux or MacOS
+    if ($IsLinux -or $IsMacOS) {
+        return $Text
+    }
+    else {
+        (Get-Culture).TextInfo.ToTitleCase($Text)
+    }
 }
 

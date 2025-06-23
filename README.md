@@ -20,12 +20,13 @@ The module contains the following commands:
 
 | Name | Alias | Synopsis |
 |------|-------|----------|
-| [Get-DiskReportingTools](docs/Get-DiskReportingTools.md) |  | Get command details for DiskReportingTools. |
+| [Get-DiskReportingTools](docs/Get-DiskReportingTools.md) |  | Get command details for DiskReportingTools |
 | [Get-RecycleBinSize](docs/Get-RecycleBinSize.md) | *rbsz* | Get recycle bin size |
 | [New-HtmlDriveReport](docs/New-HtmlDriveReport.md) |  | Create a drive HTML report |
 | [Show-DriveUsage](docs/Show-DriveUsage.md) | *sdu* | Display a colorized graph of disk usage |
-| [Show-DriveView](docs/Show-DriveView.md) | *sdv* | Display a summary view of all drives. |
-| [Show-FolderUsage](docs/Show-FolderUsage.md) | *sfu* | Show folder usage by file extension. |
+| [Show-DriveView](docs/Show-DriveView.md) | *sdv* | Display a summary view of all drives |
+| [Show-FolderUsage](docs/Show-FolderUsage.md) | *sfu* | Show folder usage by file extension |
+| [Show-FolderUsageAge](docs/Show-FolderUsageAge.md) | *sfa* | Show folder usage by file age |
 
 ### [Get-RecycleBinSize](docs/Get-RecycleBinSize.md)
 
@@ -191,6 +192,12 @@ Name  Count        Size Computername       Total   Pct Path
 .mscz     4  3169090.00 BamBam       77257099.00  4.10 /Home/Jeff
 .png     22  1289211.00 BamBam       77257099.00  1.67 /Home/Jeff
 ```
+
+### [Show-FolderUsageAge](docs/Show-FolderUsageAge.md)
+
+A related command is `Show-FolderUsageAge`. This command will display folder usage by file age based on the `LastWriteTime` property, although you can specify `CreationTime` with the `Property` parameter.
+
+![Show-FolderUsageAge](images/show-folderusage-age.png)
 
 ## Raw Data
 

@@ -25,7 +25,7 @@ $red = "$([char]27)[38;5;197m"
 $greenBG = "$([char]27)[42m"
 $yellowBG = "$([char]27)[48;5;226m"
 $redBG = "$([char]27)[48;5;197m"
-$Reset = "$([char]27)[0m"
+$reset = "$([char]27)[0m"
 $bold = "$([char]27)[1m"
 $italic = "$([char]27)[3m"
 $pathStyle = "$([char]27)[1;4;38;5;227m"
@@ -39,6 +39,7 @@ $DiskReportingANSI = @{
     'New-HtmlDriveReport' = '[1;38;5;192m'
     'Get-RecycleBinSize'  = '[1;38;5;155m'
     'Show-FolderUsage'    = '[1;38;5;226m'
+    'Show-FolderUsageAge' = '[1;38;5;141m'
     Default               = '[1;38;5;51m'
 }
 Set-Variable -Name DiskReportingANSI -Description "a hash table to store ANSI escape sequences for different commands used in verbose output. You can modify settings using ANSI sequences or `$PSStyle"
@@ -50,9 +51,10 @@ New-Variable -Name DiskReportingModule -Value $mod.moduleVersion -Description 'T
 
 $paramHash = @{
     Variable = 'DiskReportingANSI', 'DiskReportingModule'
-    Alias    = 'sdu', 'rbsz', 'sdv', 'sfu'
+    Alias    = 'sdu', 'rbsz', 'sdv', 'sfu','sfa'
     Function = 'Show-DriveUsage', 'Show-DriveView', 'New-HtmlDriveReport',
-    'Get-RecycleBinSize', 'Show-FolderUsage','Get-DiskReportingTools'
+    'Get-RecycleBinSize', 'Show-FolderUsage','Get-DiskReportingTools',
+    'Show-FolderUsageAge'
 }
 
 Export-ModuleMember @paramHash

@@ -23,9 +23,6 @@ $msg = @'
 Next steps:
     - Finalize change log
     - Run New-ReleaseChangeLog.ps1
-    - Update ReleaseNotes in module manifest
-	        $c = Get-ChangelogData
-	        "## $($c.lastVersion)`n`n$($c.ReleaseNotes)" | Set-Clipboard
     - git add .
     - git commit -m "v<Version>"
     - publish project

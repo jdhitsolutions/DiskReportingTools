@@ -6,7 +6,7 @@
       <command:verb>Get</command:verb>
       <command:noun>DiskReportingTools</command:noun>
       <maml:description>
-        <maml:para>Get command details for DiskReportingTools.</maml:para>
+        <maml:para>Get command details for DiskReportingTools</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
@@ -676,7 +676,7 @@ BAMBAM
       <command:verb>Show</command:verb>
       <command:noun>DriveView</command:noun>
       <maml:description>
-        <maml:para>Display a summary view of all drives.</maml:para>
+        <maml:para>Display a summary view of all drives</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
@@ -873,19 +873,19 @@ Free%        : 88.02</dev:code>
       <command:verb>Show</command:verb>
       <command:noun>FolderUsage</command:noun>
       <maml:description>
-        <maml:para>Show folder usage by file extension.</maml:para>
+        <maml:para>Show folder usage by file extension</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Use this cmdlet to show folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the -Threshold parameter.</maml:para>
+      <maml:para>Use this command to show folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the -Threshold parameter.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Show-FolderUsage</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Specify the path to the folder to analyze. Use a full file system path</maml:para>
+            <maml:para>Specify the path to the folder to analyze. Use a full file system path.  The path will be searched recursively.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -967,10 +967,10 @@ Free%        : 88.02</dev:code>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName, ByValue)" position="0" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Specify the path to the folder to analyze. Use a full file system path</maml:para>
+          <maml:para>Specify the path to the folder to analyze. Use a full file system path.  The path will be searched recursively.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -1097,7 +1097,7 @@ Free%        : 88.02</dev:code>
       </command:returnValue>
       <command:returnValue>
         <dev:type>
-          <maml:name>PSCustomObject</maml:name>
+          <maml:name>FolderUsageRaw</maml:name>
         </dev:type>
         <maml:description>
           <maml:para></maml:para>
@@ -1106,6 +1106,7 @@ Free%        : 88.02</dev:code>
     </command:returnValues>
     <maml:alertSet>
       <maml:alert>
+        <maml:para>Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter</maml:para>
         <maml:para>Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter</maml:para>
       </maml:alert>
     </maml:alertSet>
@@ -1119,7 +1120,9 @@ Free%        : 88.02</dev:code>
 .mp3 [ 1||||||||||||                                      ] 17.54%
 .zip [ 8||||||||||||||||||||                              ] 38.33%
 .m4a [ 1|||||||||||||                                     ] 18.93%
-.csv [ 4||||                                              ] 8.41%</dev:code>
+.csv [ 4||||                                              ] 8.41%
+
+193 total files measuring 50.03MB</dev:code>
         <dev:remarks>
           <maml:para>The output will be color formatted and styled. The number in the graph is the number of files for each extension.</maml:para>
         </dev:remarks>
@@ -1149,15 +1152,41 @@ Name       Count     Size     Total   Pct Path       ComputerName
         <maml:title>-------------------------- Example 3 --------------------------</maml:title>
         <dev:code>PS /home/jeff&gt; Show-FolderUsage . -Sort Size -Descending
 
-[BamBam] /Home/Jeff
+[BamBam] /home/jeff
 
 .mp3 [ 8  ||||||||||||||||||||||                            ] 39.80 %
 .zip [ 7  ||||||||||||||||                                  ] 19.33 %
 .jpg [ 10 ||||||||||                                        ] 15.03 %
 .m4a [ 1  |||||||                                           ] 12.22 %
-.pdf [ 7  ||||                                              ] 5.87 %</dev:code>
+.pdf [ 7  ||||                                              ] 5.87 %
+
+122 total files measuring 73.68MB</dev:code>
         <dev:remarks>
           <maml:para>This command is supported on non-Windows platforms, although it can only query the local computer. In this example, the output sorted on the Size in descending order.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 4 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; $j = Start-Job { Show-FolderUsage c:\temp -raw}
+PS C:\&gt; Receive-Job $j -Keep | Sort-Object  pct -Descending |
+Select-Object -first 10 | Format-Table -GroupBy Path -Property Name,Count,Size,Pct
+
+   Path: C:\Temp
+
+Name   Count        Size   Pct
+----   -----        ----   ---
+.db        3 37792768.00 23.38
+.so       22 28143040.00 17.41
+.zip       9 25895471.00 16.02
+.mp3       3 19099220.00 11.82
+.dll      34 16268488.00 10.07
+.dylib     8  8832364.00  5.46
+.pack      1  4365349.00  2.70
+         218  4043113.00  2.50
+.png      41  2895345.00  1.79
+.pdf       4  2574520.00  1.59</dev:code>
+        <dev:remarks>
+          <maml:para>Run a module command as a background job and then sort the results by percentage. The output is grouped by the path.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -1167,7 +1196,260 @@ Name       Count     Size     Total   Pct Path       ComputerName
         <maml:uri>https://jdhitsolutions.com/yourls/c09320</maml:uri>
       </maml:navigationLink>
       <maml:navigationLink>
+        <maml:linkText>Show-FolderUsageAge</maml:linkText>
+        <maml:uri></maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
         <maml:linkText>Show-DriveUsage</maml:linkText>
+        <maml:uri></maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Show-FolderUsageAge</command:name>
+      <command:verb>Show</command:verb>
+      <command:noun>FolderUsageAge</command:noun>
+      <maml:description>
+        <maml:para>Show folder usage by file age</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Use this command to show folder usage by file age. The default aging criteria is based on the LastWriteTime property, but you can use the CreationTime property instead. The default output is a color formatted display of extensions showing a percentage of the total folder size.</maml:para>
+      <maml:para>The assumption is that you will process a folder with many files.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Show-FolderUsageAge</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Specify the path to the folder to analyze. Use a full file system path. The path will be searched recursively.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName,ByValue)" position="named" aliases="CN">
+          <maml:name>ComputerName</maml:name>
+          <maml:description>
+            <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost. This is a dynamic parameter and will only be available on Windows PowerShell.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RunAs">
+          <maml:name>Credential</maml:name>
+          <maml:description>
+            <maml:para>specify an alternate credential. This is a dynamic parameter and will only be available on Windows</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCredential</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Property</maml:name>
+          <maml:description>
+            <maml:para>Specify the file aging property.</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">LastWriteTime</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">CreationTime</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>LastWriteTime</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:description>
+            <maml:para>Display raw output without formatting.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName,ByValue)" position="named" aliases="CN">
+        <maml:name>ComputerName</maml:name>
+        <maml:description>
+          <maml:para>Specify the name of a remote computer. You must have admin rights. The default is the localhost. This is a dynamic parameter and will only be available on Windows PowerShell.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="named" aliases="RunAs">
+        <maml:name>Credential</maml:name>
+        <maml:description>
+          <maml:para>specify an alternate credential. This is a dynamic parameter and will only be available on Windows</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCredential</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Specify the path to the folder to analyze. Use a full file system path. The path will be searched recursively.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Property</maml:name>
+        <maml:description>
+          <maml:para>Specify the file aging property.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>LastWriteTime</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:description>
+          <maml:para>Display raw output without formatting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.String[]</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+      <command:inputType>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSCredential</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>FileAging</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para>Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter</maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Show-FolderUsageAge C:\Presentations\ -ComputerName Cadenza
+
+[CADENZA] C:\Presentations\
+
+2Yrs    [ 106 ||||||||||||||||||||||||||||||                   ] 67.81% (63,766.04KB)
+1Yrs    [ 46  ||||                                             ] 0.43% (408.49KB)
+6Mo     [ 1   ||                                               ] 0.06% (52.19KB)
+3Mo     [ 46  ||||                                             ] 13.58% (12,766.72KB)
+1Mo     [ 66  ||||||||||                                       ] 6.89% (6,480.22KB)
+1Wk     [ 50  |||||||||||||||                                  ] 11.23% (10,556.82KB)
+Current [ 0                                                    ] 0.00% (0.00KB)
+
+315 total files measuring 91.83MB</dev:code>
+        <dev:remarks>
+          <maml:para>The default output will be a color formatted bar chart. The number in the graph is the number of files for each aging group.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- Example 2 --------------------------</maml:title>
+        <dev:code>PS C:\&gt; Show-FolderUsageAge c:\work -Raw | Tee-Object -Variable r
+
+Path         : C:\work
+Property     : LastWriteTime
+AgingGroups  : {@{Name=2Yrs; Count=476; Size=55326826; PctTotal=73.6998166270543},
+               @{Name=1Yrs;         Count=113;Size=16610523; PctTotal=22.1265629656664},
+               @{Name=6Mo; Count=33; Size=1490966;PctTotal=1.98608755899304}, @{Name=3Mo;
+               Count=39; Size=481521; PctTotal=0.641425000633072}}
+TotalFiles   : 677
+TotalSize    : 75070507
+Computername : PROSPERO
+
+PS C:\&gt; $r.AgingGroups
+
+Name    Count     Size PctTotal
+----    -----     ---- --------
+2Yrs      476 55326826    73.70
+1Yrs      113 16610523    22.13
+6Mo        33  1490966     1.99
+3Mo        39   481521     0.64
+1Mo         3   502482     0.67
+1Wk         3   601009     0.80
+Current    10    57180     0.08</dev:code>
+        <dev:remarks>
+          <maml:para>Get raw folder usage data.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Show-FolderUsage</maml:linkText>
         <maml:uri></maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>

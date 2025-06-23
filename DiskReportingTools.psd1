@@ -4,7 +4,7 @@
 
 @{
     RootModule           = 'DiskReportingTools.psm1'
-    ModuleVersion        = '0.12.0'
+    ModuleVersion        = '0.13.0'
     CompatiblePSEditions = @('Core', 'Desktop')
     GUID                 = '20e6a37d-d899-4594-96fe-39ab7f608371'
     Author               = 'Jeff Hicks'
@@ -18,9 +18,10 @@
         'New-HtmlDriveReport',
         'Get-RecycleBinSize',
         'Show-FolderUsage',
+        'Show-FolderUsageAge',
         'Get-DiskReportingTools'
     )
-    AliasesToExport = 'sdu', 'rbsz', 'sfu','sdv'
+    AliasesToExport = 'sdu', 'rbsz', 'sfu','sdv','sfa'
     TypesToProcess = @()
     FormatsToProcess = @(
         'formats\PSDriveUsage.format.ps1xml',

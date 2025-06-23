@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Show folder usage by file extension.
+Show folder usage by file extension
 
 ## SYNTAX
 
@@ -29,7 +29,7 @@ Show-FolderUsage [-Path] <String> [-Threshold <Double>] [-Sort <String>] [-Desce
 
 ## DESCRIPTION
 
-Use this cmdlet to show folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the -Threshold parameter.
+Use this command to show folder usage by file extension. The default output is a color formatted display of extensions showing a percentage of the total folder size. The output is limited to files that meet a minimum threshold percentage of the total folder size. The default threshold is 5%. You can change this value with the -Threshold parameter.
 
 ## EXAMPLES
 
@@ -44,6 +44,8 @@ PS C:\> Show-FolderUsage c:\temp
 .zip [ 8||||||||||||||||||||                              ] 38.33%
 .m4a [ 1|||||||||||||                                     ] 18.93%
 .csv [ 4||||                                              ] 8.41%
+
+193 total files measuring 50.03MB
 ```
 
 The output will be color formatted and styled. The number in the graph is the number of files for each extension.
@@ -75,23 +77,50 @@ Get the raw data so that you can do you own formatting or visualization.
 ```powershell
 PS /home/jeff> Show-FolderUsage . -Sort Size -Descending
 
-[BamBam] /Home/Jeff
+[BamBam] /home/jeff
 
 .mp3 [ 8  ||||||||||||||||||||||                            ] 39.80 %
 .zip [ 7  ||||||||||||||||                                  ] 19.33 %
 .jpg [ 10 ||||||||||                                        ] 15.03 %
 .m4a [ 1  |||||||                                           ] 12.22 %
 .pdf [ 7  ||||                                              ] 5.87 %
+
+122 total files measuring 73.68MB
 ```
 
 This command is supported on non-Windows platforms, although it can only query the local computer. In this example, the output sorted on the Size in descending order.
+
+### Example 4
+
+```powershell
+PS C:\> $j = Start-Job { Show-FolderUsage c:\temp -raw}
+PS C:\> Receive-Job $j -Keep | Sort-Object  pct -Descending |
+Select-Object -first 10 | Format-Table -GroupBy Path -Property Name,Count,Size,Pct
+
+   Path: C:\Temp
+
+Name   Count        Size   Pct
+----   -----        ----   ---
+.db        3 37792768.00 23.38
+.so       22 28143040.00 17.41
+.zip       9 25895471.00 16.02
+.mp3       3 19099220.00 11.82
+.dll      34 16268488.00 10.07
+.dylib     8  8832364.00  5.46
+.pack      1  4365349.00  2.70
+         218  4043113.00  2.50
+.png      41  2895345.00  1.79
+.pdf       4  2574520.00  1.59
+```
+
+Run a module command as a background job and then sort the results by percentage. The output is grouped by the path.
 
 ## PARAMETERS
 
 ### -Path
 
 Specify the path to the folder to analyze.
-Use a full file system path
+Use a full file system path.  The path will be searched recursively.
 
 ```yaml
 Type: String
@@ -101,7 +130,7 @@ Aliases:
 Required: True
 Position: 0
 Default value: None
-Accept pipeline input: True (ByPropertyName, ByValue)
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -223,12 +252,14 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### String
 
-### PSCustomObject
+### FolderUsageRaw
 
 ## NOTES
 
 Learn more about PowerShell: http://jdhitsolutions.com/yourls/newsletter
 
 ## RELATED LINKS
+
+[Show-FolderUsageAge](Show-FolderUsageAge.md)
 
 [Show-DriveUsage](Show-DriveUsage.md)

@@ -4,8 +4,7 @@ Function Show-FolderUsage {
     Param(
         [Parameter(
             Position = 0,
-            Mandatory = $true,
-            ValueFromPipeline,
+            Mandatory,
             ValueFromPipelineByPropertyName,
             HelpMessage = 'Specify the path to the folder to analyze. Use a full file system path')]
         [ValidateNotNullOrEmpty()]
@@ -117,7 +116,6 @@ Function Show-FolderUsage {
             ArgumentList = ''
             ErrorAction  = 'Stop'
         }
-
     } #begin
     Process {
         $PSDefaultParameterValues['_verbose:block'] = 'Process'
@@ -161,14 +159,17 @@ Function Show-FolderUsage {
             If ($data) {
                 #get the total sum of all files
                 $totalSum = ($data | Measure-Object -Property size -Sum).Sum
+                $totalCount = ($data | Measure-Object -Property Count -Sum).Sum
                 Write-Information "Total size: $totalSum bytes" -Tags data
                 $data | Add-Member -MemberType NoteProperty -Name 'Total' -Value $totalSum -Force
                 $data | Add-Member -MemberType ScriptProperty -Name 'Pct' -Value { ($this.Size / $this.total) * 100 } -Force
                 Write-Information $data -Tags data
 
                 if ($raw) {
-                    $data | Select-Object -Property *,
-                    @{Name = 'Path'; Expression = { _toTitleCase $Path } }-ExcludeProperty RunspaceID
+                    $data.PSObject.Properties.Remove("RunspaceID")
+                    $data | Add-Member -MemberType NoteProperty -Name Path -Value (_toTitleCase $Path) -Force
+                    $data.PSObject.TypeNames.Insert(0, 'FolderUsageRaw')
+                    $data
                 }
                 else {
                     #format the results
@@ -217,6 +218,7 @@ $header
 
                     } #foreach item
 
+                     $out +="`n{0:N0} total files measuring {1:N2}MB" -f $totalCount, ($totalSum / 1MB)
                     $out
                 }
                 Clear-Variable -Name data

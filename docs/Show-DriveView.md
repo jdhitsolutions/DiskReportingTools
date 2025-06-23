@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Display a summary view of all drives.
+Display a summary view of all drives
 
 ## SYNTAX
 

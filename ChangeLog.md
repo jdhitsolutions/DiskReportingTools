@@ -4,6 +4,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2025-06-23
+
+### Added
+
+- Added command `Show-FolderUsageAge`.
+
+### Changed
+
+- Updated output of `Show-FolderUsage` to display a total summary.
+- Updated `README`.
+
+### Fixed
+
+- Corrected errors in pipeline parameter binding in `Show-FolderUsage`.
+
 ## [0.12.0] - 2025-06-19
 
 ### Added
@@ -65,7 +80,8 @@ This is private release
 
 - Initial project files
 
-[Unreleased]: https://github.com/jdhitsolutions/DiskReportingTools/compare/v0.12.0..HEAD
+[Unreleased]: https://github.com/jdhitsolutions/DiskReportingTools/compare/v0.13.0..HEAD
+[0.13.0]: https://github.com/jdhitsolutions/DiskReportingTools/compare/v0.12.0..v0.13.0
 [0.12.0]: https://github.com/jdhitsolutions/DiskReportingTools/compare/v0.11.0..v0.12.0
 [0.11.0]: https://github.com/jdhitsolutions/DiskReportingTools/compare/v0.10.0..v0.11.0
 [0.10.0]:

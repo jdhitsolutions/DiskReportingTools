@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Get command details for DiskReportingTools.
+Get command details for DiskReportingTools
 
 ## SYNTAX
 

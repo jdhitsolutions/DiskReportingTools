@@ -43,6 +43,7 @@ Function Get-RecycleBinSize {
         #define a script block to run remotely
         $getSB = {
             Get-CimInstance -ClassName Win32_LogicalDisk -Filter 'DriveType=3' | ForEach-Object {
+                #suppress errors if the recycle bin is not available
                 $rbSize = Get-ChildItem -Path "$($_.DeviceID)\`$Recycle.Bin" -Force -File -Recurse -ErrorAction SilentlyContinue |
                 Measure-Object -Property Length -Sum
                 #return a hashtable

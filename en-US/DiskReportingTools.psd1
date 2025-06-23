@@ -9,6 +9,7 @@ ConvertFrom-StringData @"
     GettingInfo = Getting module and command details
     HTMLFile = Writing HTML report to {0}
     missingCommand = The command '{0}' was not found. Please install it to use this command.
+    NoFiles = No files found in the specified path.
     PSVersion = Running under PowerShell version {0}
     QueryComputer = Querying disk information from {0}
     RBSize = Getting recycle bin size information for {0}
